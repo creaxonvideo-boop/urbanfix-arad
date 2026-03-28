@@ -4,51 +4,331 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>UrbanFix Arad</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:#0A0C10;color:#E8EAF0;font-family:'Segoe UI',sans-serif;height:100vh;display:flex;align-items:center;justify-content:center}
-.app{text-align:center;padding:40px}
-.logo{font-size:64px;margin-bottom:16px}
-.title{font-size:36px;font-weight:800;margin-bottom:8px}
-.title span{color:#FF6B35}
-.sub{font-size:13px;color:#555D75;margin-bottom:32px;font-family:monospace;letter-spacing:1px}
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:400px;margin:0 auto 24px}
-.card{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:16px;text-align:center}
-.card-val{font-size:28px;font-weight:800;font-family:monospace}
-.card-lbl{font-size:10px;color:#555D75;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-.status{font-size:11px;color:#555D75;font-family:monospace;margin-top:16px}
-.status span{color:#00E676}
-.dot{width:8px;height:8px;border-radius:50%;background:#00E676;display:inline-block;margin-right:6px;animation:bl 2s infinite}
-@keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
+html,body,#root{height:100%;background:#0A0C10;color:#E8EAF0;font-family:'Syne',sans-serif}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#12151C}::-webkit-scrollbar-thumb{background:#2A2F3E;border-radius:2px}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="logo">???</div>
-  <div class="title">Urban<span>Fix</span> Arad</div>
-  <div class="sub">SISTEM DE RAPORTARE PROBLEME URBANE � ARAD � ROM�NIA</div>
-  <div class="cards">
-    <div class="card"><div class="card-val" id="active" style="color:#FF6B35">-</div><div class="card-lbl">Probleme active</div></div>
-    <div class="card"><div class="card-val" id="resolved" style="color:#00E676">-</div><div class="card-lbl">Rezolvate</div></div>
-    <div class="card"><div class="card-val" id="votes" style="color:#00E5FF">-</div><div class="card-lbl">Total voturi</div></div>
-    <div class="card"><div class="card-val" id="total" style="color:#7C4DFF">-</div><div class="card-lbl">Total rapoarte</div></div>
-  </div>
-  <div class="status"><span class="dot"></span>Backend: <span>ONLINE</span> � urbanfix-arad.onrender.com</div>
+<div id="root"><div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#555D75;font-family:monospace">Se încarcă UrbanFix Arad...</div></div>
+<script type="text/babel" data-presets="react">
+const {useState,useEffect,useRef}=React;
+const ADMIN_PASSWORD="Arad2026Admin!";
+const ARAD_CENTER={lat:46.1865,lng:21.3123};
+const ISSUE_TYPES=[
+{id:"crack",label:"Fisură / Groapă",icon:"⚠️",color:"#FF6B35"},
+{id:"flood",label:"Inundație / Apă stagnantă",icon:"💧",color:"#4FC3F7"},
+{id:"light",label:"Iluminat defect",icon:"💡",color:"#FFD54F"},
+{id:"tree",label:"Copac căzut",icon:"🌳",color:"#66BB6A"},
+{id:"sign",label:"Indicator lipsă",icon:"🚧",color:"#EF5350"},
+{id:"sidewalk",label:"Trotuar deteriorat",icon:"🧱",color:"#AB47BC"},
+{id:"graffiti",label:"Graffiti",icon:"🖌️",color:"#EC407A"},
+{id:"waste",label:"Deșeuri ilegale",icon:"🗑️",color:"#8D6E63"},
+];
+const INIT=[
+{id:1,type:"crack",title:"Groapă adâncă pe Bd. Revoluției",desc:"Groapă periculoasă, adâncime 15cm.",lat:46.1872,lng:21.3145,votes:47,status:"active",date:"2026-03-10",comments:8},
+{id:2,type:"light",title:"Stâlp iluminat nefuncțional",desc:"3 stâlpi fără lumină pe Calea Aurel Vlaicu.",lat:46.1855,lng:21.3098,votes:31,status:"active",date:"2026-03-15",comments:3},
+{id:3,type:"flood",title:"Apă stagnantă după ploaie",desc:"Canal înfundat, inundație după ploaie.",lat:46.1890,lng:21.3165,votes:28,status:"active",date:"2026-03-18",comments:5},
+{id:4,type:"sidewalk",title:"Trotuar complet distrus",desc:"Dale ridicate, periculos pentru vârstnici.",lat:46.1848,lng:21.3112,votes:22,status:"active",date:"2026-03-20",comments:2},
+{id:5,type:"waste",title:"Gunoi ilegal depozitat",desc:"Deșeuri construcție abandonate.",lat:46.1878,lng:21.3089,votes:19,status:"active",date:"2026-03-22",comments:4},
+{id:6,type:"crack",title:"Fisuri structurale pe pod",desc:"Fisuri pe podul peste Mureș.",lat:46.1830,lng:21.3200,votes:63,status:"resolved",date:"2026-02-15",resolvedDate:"2026-03-01",comments:12},
+{id:7,type:"sign",title:"Indicator STOP lipsă",desc:"Indicator dispărut, intersecție periculoasă.",lat:46.1862,lng:21.3134,votes:41,status:"resolved",date:"2026-02-20",resolvedDate:"2026-03-10",comments:6},
+];
+const RATE_MS=60000;
+const getRateSecs=()=>{try{const l=localStorage.getItem("uf_last");if(!l)return 0;const d=Date.now()-+l;return d>=RATE_MS?0:Math.ceil((RATE_MS-d)/1000);}catch{return 0;}};
+const stampRate=()=>{try{localStorage.setItem("uf_last",String(Date.now()));}catch{}};
+function haversine(a,b,c,d){const R=6371000,r=Math.PI/180,e=(c-a)*r,f=(d-b)*r,g=Math.sin(e/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(f/2)**2;return R*2*Math.atan2(Math.sqrt(g),Math.sqrt(1-g));}
+function exportCSV(issues){const h=["ID","Data","Categorie","Titlu","Descriere","Lat","Lng","Status","Voturi"],r=issues.map(i=>[i.id,i.date,ISSUE_TYPES.find(t=>t.id===i.type)?.label||i.type,i.title,i.desc||"",i.lat,i.lng,i.status==="resolved"?"Rezolvat":"Activ",i.votes]),csv="\uFEFF"+[h,...r].map(row=>row.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n"),b=new Blob([csv],{type:"text/csv;charset=utf-8;"}),u=URL.createObjectURL(b),a=Object.assign(document.createElement("a"),{href:u,download:`UrbanFix_${new Date().toISOString().split("T")[0]}.csv`});a.click();URL.revokeObjectURL(u);}
+function Toast({msg,icon="✅",variant="",onDone}){useEffect(()=>{const t=setTimeout(onDone,3000);return()=>clearTimeout(t)},[]);return <div style={{position:'fixed',bottom:20,right:20,background:'#12151C',border:'1px solid #2A2F3E',borderRadius:10,padding:'12px 16px',fontSize:13,zIndex:200,display:'flex',alignItems:'center',gap:8,boxShadow:'0 4px 24px rgba(0,0,0,.55)',color:'#E8EAF0'}}><span style={{fontSize:16}}>{icon}</span>{msg}</div>;}
+
+function TypeBadge({typeId}){const t=ISSUE_TYPES.find(x=>x.id===typeId)||ISSUE_TYPES[0];return <span style={{display:'inline-flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:20,fontSize:10,fontFamily:'Space Mono',fontWeight:700,background:t.color+"22",color:t.color}}>{t.icon} {t.label}</span>;}
+
+function FakeMap({issues,onMapClick,pendingPin,selId,onSel,rateLimited,rateSecs}){
+const ref=useRef(null);
+const toXY=(lat,lng)=>({x:Math.max(2,Math.min(98,50+(lng-ARAD_CENTER.lng)*560)),y:Math.max(2,Math.min(98,50-(lat-ARAD_CENTER.lat)*800))});
+const click=e=>{if(!ref.current)return;const r=ref.current.getBoundingClientRect(),px=((e.clientX-r.left)/r.width)*100,py=((e.clientY-r.top)/r.height)*100;onMapClick({lat:ARAD_CENTER.lat+(50-py)/800,lng:ARAD_CENTER.lng+(px-50)/560,px,py});};
+return <div ref={ref} onClick={rateLimited?undefined:click} style={{width:'100%',height:360,position:'relative',overflow:'hidden',background:'#1a1f2e',cursor:rateLimited?'not-allowed':'crosshair'}}>
+<svg style={{position:'absolute',inset:0,width:'100%',height:'100%',opacity:.2}} viewBox="0 0 960 360" preserveAspectRatio="none">
+{[[0,85,960,6],[0,145,960,10],[0,205,960,6],[0,260,960,8]].map(([x,y,w,h],i)=><rect key={i} x={x} y={y} width={w} height={h} fill="#3a4560"/>)}
+{[[120,0,6,360],[240,0,10,360],[380,0,6,360],[480,0,12,360],[600,0,6,360],[720,0,8,360]].map(([x,y,w,h],i)=><rect key={i+10} x={x} y={y} width={w} height={h} fill="#4a5570"/>)}
+<ellipse cx="480" cy="338" rx="500" ry="25" fill="#1a2840" opacity=".9"/>
+{[[130,95,100,40],[250,95,120,40],[390,95,80,40],[490,95,100,40],[610,95,100,40],[130,155,100,40],[250,155,120,40],[390,155,80,40],[490,155,100,40],[130,215,100,40],[250,215,120,40],[490,215,100,40]].map(([x,y,w,h],i)=><rect key={i+20} x={x} y={y} width={w} height={h} rx="2" fill="#1e2438"/>)}
+</svg>
+<div style={{position:'absolute',top:'32%',left:'4%',fontSize:10,fontFamily:'Space Mono',color:'#4a5578',pointerEvents:'none'}}>Bd. Revoluției</div>
+<div style={{position:'absolute',top:'52%',left:'22%',fontSize:10,fontFamily:'Space Mono',color:'#4a5578',pointerEvents:'none'}}>Calea Aurel Vlaicu</div>
+<div style={{position:'absolute',top:'76%',left:'36%',fontSize:10,fontFamily:'Space Mono',color:'#4a5578',pointerEvents:'none'}}>Râul Mureș</div>
+{issues.map(issue=>{const pos=toXY(issue.lat,issue.lng),t=ISSUE_TYPES.find(x=>x.id===issue.type)||ISSUE_TYPES[0];return <div key={issue.id} style={{position:'absolute',left:`${pos.x}%`,top:`${pos.y}%`,transform:'translate(-50%,-100%)',cursor:'pointer',zIndex:2}} onClick={e=>{e.stopPropagation();onSel(issue);}}>
+<div style={{width:28,height:28,borderRadius:'50% 50% 50% 0',transform:'rotate(-45deg)',background:selId===issue.id?t.color:t.color+"99",display:'flex',alignItems:'center',justifyContent:'center',border:'2px solid rgba(255,255,255,.3)',boxShadow:'0 2px 8px rgba(0,0,0,.5)'}}><span style={{transform:'rotate(45deg)',fontSize:12}}>{t.icon}</span></div>
+<div style={{position:'absolute',top:-8,right:-8,background:'#FF6B35',color:'#fff',fontSize:9,fontFamily:'Space Mono',fontWeight:700,padding:'1px 4px',borderRadius:8,minWidth:18,textAlign:'center'}}>{issue.votes}</div>
+</div>;})}
+{pendingPin&&<div style={{position:'absolute',left:`${pendingPin.px}%`,top:`${pendingPin.py}%`,transform:'translate(-50%,-50%)',zIndex:5}}><div style={{width:12,height:12,background:'#FF6B35',borderRadius:'50%',border:'2px solid #fff'}}/></div>}
+{rateLimited&&<div style={{position:'absolute',inset:0,background:'rgba(10,12,16,.72)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',zIndex:10,gap:6}}><div style={{fontSize:34}}>⏱️</div><div style={{fontSize:14,fontWeight:700,color:'#FF1744'}}>Așteptați</div><div style={{fontSize:28,fontWeight:800,fontFamily:'Space Mono',color:'#FF1744'}}>{rateSecs}s</div></div>}
+<div style={{position:'absolute',top:12,right:12,display:'flex',flexDirection:'column',gap:4}}>
+{['＋','－','◎'].map((c,i)=><div key={i} style={{width:32,height:32,background:'#12151C',border:'1px solid #2A2F3E',borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:14,color:'#8B92A8'}}>{c}</div>)}
 </div>
-<script>
-fetch('/api/reports?status=all')
-  .then(r=>r.json())
-  .then(data=>{
-    const issues=data.data||[];
-    const active=issues.filter(i=>i.status==='active');
-    const resolved=issues.filter(i=>i.status==='resolved');
-    document.getElementById('active').textContent=active.length;
-    document.getElementById('resolved').textContent=resolved.length;
-    document.getElementById('votes').textContent=issues.reduce((a,i)=>a+i.votes,0);
-    document.getElementById('total').textContent=issues.length;
-  })
-  .catch(()=>{});
+<div style={{position:'absolute',bottom:12,left:12,background:'rgba(10,12,16,.85)',border:'1px solid #2A2F3E',borderRadius:6,padding:'6px 10px',fontSize:11,fontFamily:'Space Mono',color:'#8B92A8'}}>ARAD · <span style={{color:'#00E5FF'}}>46.1865°N 21.3123°E</span>{!rateLimited&&" · Click pt. a raporta"}</div>
+</div>;}
+
+function ReportForm({pin,onClose,onSubmit,rateLimited,rateSecs,nearbyIssue,onVoteExisting}){
+const[type,setType]=useState("crack"),[title,setTitle]=useState(""),[desc,setDesc]=useState(""),[imgs,setImgs]=useState([]);
+const fref=useRef(null);
+const addImgs=e=>Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>setImgs(p=>[...p,{url:ev.target.result}]);r.readAsDataURL(f);});
+return <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.78)',zIndex:100,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(4px)'}} onClick={onClose}>
+<div style={{background:'#12151C',border:'1px solid #2A2F3E',borderRadius:16,width:'100%',maxWidth:520,maxHeight:'88vh',overflowY:'auto',boxShadow:'0 4px 24px rgba(0,0,0,.55)'}} onClick={e=>e.stopPropagation()}>
+<div style={{padding:'20px 20px 0',display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
+<div style={{fontSize:18,fontWeight:800,color:'#E8EAF0'}}>🚨 Raportează problemă</div>
+<div style={{width:32,height:32,borderRadius:'50%',background:'#1A1E28',border:'1px solid #2A2F3E',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:16,color:'#8B92A8'}} onClick={onClose}>✕</div>
+</div>
+<div style={{padding:'0 20px 20px'}}>
+{nearbyIssue&&<div style={{background:'rgba(0,229,255,.08)',border:'1px solid rgba(0,229,255,.35)',borderRadius:10,padding:'14px 16px',marginBottom:16}}>
+<div style={{fontSize:13,fontWeight:700,color:'#00E5FF',marginBottom:6}}>⚠️ Există deja un raport în această zonă (20m)</div>
+<div style={{display:'flex',alignItems:'center',gap:10,background:'#1A1E28',borderRadius:6,padding:'10px 12px'}}>
+<TypeBadge typeId={nearbyIssue.type}/>
+<div style={{flex:1,fontSize:13,fontWeight:700,color:'#E8EAF0'}}>{nearbyIssue.title}</div>
+<button style={{background:'rgba(0,230,118,.12)',color:'#00E676',border:'1px solid rgba(0,230,118,.3)',borderRadius:6,padding:'5px 10px',fontSize:11,fontWeight:700,cursor:'pointer'}} onClick={()=>{onVoteExisting(nearbyIssue.id);onClose();}}>▲ Votează</button>
+</div></div>}
+{rateLimited&&<div style={{display:'flex',alignItems:'center',gap:12,background:'rgba(255,23,68,.1)',border:'1px solid rgba(255,23,68,.35)',borderRadius:10,padding:'12px 16px',marginBottom:16}}>
+<span style={{fontSize:22}}>⏱️</span><div style={{flex:1}}><strong style={{display:'block',fontSize:13,color:'#FF1744',marginBottom:2}}>Te rugăm să aștepți un minut.</strong><span style={{fontSize:12,color:'#8B92A8',fontFamily:'Space Mono'}}>1 raport / min / IP</span></div>
+<div style={{fontSize:24,fontWeight:800,fontFamily:'Space Mono',color:'#FF1744'}}>{rateSecs}s</div></div>}
+<div style={{background:'#222736',borderRadius:6,padding:'8px 12px',fontSize:11,fontFamily:'Space Mono',color:'#00E5FF',display:'flex',alignItems:'center',gap:6,marginBottom:16}}>
+<div style={{width:6,height:6,borderRadius:'50%',background:'#00E5FF'}}/>Pin: {pin.lat.toFixed(5)}°N, {pin.lng.toFixed(5)}°E</div>
+<div style={{marginBottom:16}}>
+<label style={{display:'block',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.8px',color:'#555D75',marginBottom:6,fontFamily:'Space Mono'}}>Tip problemă</label>
+<div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8}}>
+{ISSUE_TYPES.map(t=><div key={t.id} style={{display:'flex',alignItems:'center',gap:8,padding:'10px 12px',borderRadius:6,border:`1px solid ${type===t.id?t.color:'#2A2F3E'}`,cursor:'pointer',background:type===t.id?'rgba(255,255,255,.05)':'#1A1E28',color:type===t.id?t.color:'#E8EAF0',fontSize:12,fontWeight:600}} onClick={()=>setType(t.id)}>
+<span style={{fontSize:18}}>{t.icon}</span><span style={{fontSize:11}}>{t.label}</span></div>)}
+</div></div>
+<div style={{marginBottom:16}}>
+<label style={{display:'block',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.8px',color:'#555D75',marginBottom:6,fontFamily:'Space Mono'}}>Titlu *</label>
+<input style={{width:'100%',background:'#1A1E28',border:'1px solid #2A2F3E',borderRadius:6,padding:'10px 12px',color:'#E8EAF0',fontFamily:'Syne',fontSize:13,outline:'none'}} placeholder="ex: Groapă adâncă pe Bd. Revoluției" value={title} onChange={e=>setTitle(e.target.value)} maxLength={100}/></div>
+<div style={{marginBottom:16}}>
+<label style={{display:'block',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.8px',color:'#555D75',marginBottom:6,fontFamily:'Space Mono'}}>Descriere</label>
+<textarea style={{width:'100%',background:'#1A1E28',border:'1px solid #2A2F3E',borderRadius:6,padding:'10px 12px',color:'#E8EAF0',fontFamily:'Syne',fontSize:13,outline:'none',resize:'vertical',minHeight:80}} placeholder="Descrie problema..." value={desc} onChange={e=>setDesc(e.target.value)}/></div>
+<div style={{marginBottom:16}}>
+<label style={{display:'block',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.8px',color:'#555D75',marginBottom:6,fontFamily:'Space Mono'}}>Fotografii</label>
+<div style={{border:'2px dashed #2A2F3E',borderRadius:6,padding:20,textAlign:'center',cursor:'pointer',background:'#1A1E28'}} onClick={()=>fref.current?.click()}>
+<div style={{fontSize:22,marginBottom:4}}>📷</div>
+<div style={{fontSize:12,color:'#8B92A8'}}>Adaugă fotografii</div></div>
+<input ref={fref} type="file" accept="image/*" multiple style={{display:'none'}} onChange={addImgs}/>
+{imgs.length>0&&<div style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:10}}>{imgs.map((img,i)=><div key={i} style={{width:60,height:60,borderRadius:6,position:'relative',overflow:'hidden'}}><img src={img.url} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/><div style={{position:'absolute',top:2,right:2,width:16,height:16,background:'rgba(0,0,0,.7)',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,cursor:'pointer',color:'#fff'}} onClick={()=>setImgs(p=>p.filter((_,j)=>j!==i))}>✕</div></div>)}</div>}
+</div>
+<div style={{fontSize:11,color:'#555D75',fontFamily:'Space Mono',marginBottom:14,lineHeight:1.6,background:'#1A1E28',borderRadius:6,padding:'8px 12px',border:'1px solid #2A2F3E'}}>🔒 Nu este necesar un cont. IP-ul este stocat intern doar pentru moderare.</div>
+<button style={{width:'100%',padding:12,fontSize:14,background:!title.trim()||rateLimited?'rgba(255,107,53,.4)':'#FF6B35',color:'#fff',border:'none',borderRadius:6,cursor:!title.trim()||rateLimited?'not-allowed':'pointer',fontFamily:'Syne',fontWeight:700}} disabled={!title.trim()||rateLimited} onClick={()=>onSubmit({type,title,desc,lat:pin.lat,lng:pin.lng,images:imgs})}>{rateLimited?`⏱️ Așteptați ${rateSecs}s...`:"📤 Trimite raportul"}</button>
+</div></div></div>;}
+
+function IssueDetail({issue,onClose,onVote,onResolve,votedIds}){
+const t=ISSUE_TYPES.find(x=>x.id===issue.type)||ISSUE_TYPES[0],voted=votedIds.includes(issue.id);
+return <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.78)',zIndex:100,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(4px)'}} onClick={onClose}>
+<div style={{background:'#12151C',border:'1px solid #2A2F3E',borderRadius:16,width:'100%',maxWidth:520,maxHeight:'88vh',overflowY:'auto',boxShadow:'0 4px 24px rgba(0,0,0,.55)'}} onClick={e=>e.stopPropagation()}>
+<div style={{padding:'20px 20px 0',display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
+<div style={{fontSize:15,fontWeight:800,color:'#E8EAF0'}}>{issue.title}</div>
+<div style={{width:32,height:32,borderRadius:'50%',background:'#1A1E28',border:'1px solid #2A2F3E',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:16,color:'#8B92A8'}} onClick={onClose}>✕</div>
+</div>
+<div style={{padding:'0 20px 20px'}}>
+<div style={{width:'100%',height:160,background:'#1A1E28',borderRadius:6,border:'1px solid #2A2F3E',display:'flex',alignItems:'center',justifyContent:'center',fontSize:48,marginBottom:16}}>{t.icon}</div>
+<div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:12}}>
+<TypeBadge typeId={issue.type}/>
+<span style={{padding:'2px 8px',borderRadius:20,fontSize:10,fontFamily:'Space Mono',fontWeight:700,background:issue.status==='resolved'?'rgba(0,230,118,.15)':'rgba(255,107,53,.15)',color:issue.status==='resolved'?'#00E676':'#FF6B35'}}>{issue.status==='resolved'?'✅ Rezolvat':'🔴 Activ'}</span>
+<span style={{padding:'3px 10px',borderRadius:20,fontSize:10,fontFamily:'Space Mono',fontWeight:700,background:'#1A1E28',color:'#8B92A8',border:'1px solid #2A2F3E'}}>📅 {issue.date}</span>
+</div>
+<p style={{fontSize:13,color:'#8B92A8',lineHeight:1.6,marginBottom:16}}>{issue.desc}</p>
+<div style={{display:'flex',gap:8,marginBottom:16}}>
+<button style={{flex:1,padding:'8px 16px',background:voted?'#FF6B35':'#1A1E28',color:voted?'#fff':'#8B92A8',border:'1px solid #2A2F3E',borderRadius:6,cursor:'pointer',fontFamily:'Syne',fontWeight:700,fontSize:12}} onClick={()=>onVote(issue.id)}>{voted?'▲ Votat':'▲ Votează'} · {issue.votes}</button>
+{issue.status==='active'&&<button style={{flex:1,padding:'8px 16px',background:'rgba(0,230,118,.12)',color:'#00E676',border:'1px solid rgba(0,230,118,.3)',borderRadius:6,cursor:'pointer',fontFamily:'Syne',fontWeight:700,fontSize:12}} onClick={()=>onResolve(issue.id)}>✅ Marchează rezolvat</button>}
+</div>
+<div style={{height:1,background:'#2A2F3E',margin:'16px 0'}}/>
+<div style={{display:'flex',gap:8,marginTop:10}}>
+<input style={{flex:1,background:'#1A1E28',border:'1px solid #2A2F3E',borderRadius:6,padding:'10px 12px',color:'#E8EAF0',fontFamily:'Syne',fontSize:13,outline:'none'}} placeholder="Adaugă un comentariu anonim..."/>
+<button style={{padding:'8px 16px',background:'#FF6B35',color:'#fff',border:'none',borderRadius:6,cursor:'pointer',fontFamily:'Syne',fontWeight:700}}>→</button>
+</div>
+</div></div></div>;}
+
+function AdminLogin({onSuccess}){
+const[pw,setPw]=useState(""),[err,setErr]=useState("");
+return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100%',padding:20}}>
+<div style={{background:'#12151C',border:'1px solid #7C4DFF',borderRadius:16,padding:36,width:'100%',maxWidth:380,boxShadow:'0 0 40px rgba(124,77,255,.2)'}}>
+<div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:40,marginBottom:8}}>🛡️</div><div style={{fontSize:22,fontWeight:800,color:'#7C4DFF'}}>Admin Portal</div><div style={{fontSize:11,color:'#555D75',fontFamily:'Space Mono',marginTop:4}}>UrbanFix Arad · Acces restricționat</div></div>
+{err&&<div style={{background:'rgba(255,23,68,.12)',border:'1px solid rgba(255,23,68,.35)',borderRadius:6,padding:'10px 14px',fontSize:12,color:'#FF1744',fontFamily:'Space Mono',marginBottom:14,textAlign:'center'}}>❌ {err}</div>}
+<div style={{marginBottom:16}}>
+<label style={{display:'block',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.8px',color:'#555D75',marginBottom:6,fontFamily:'Space Mono'}}>Parolă admin</label>
+<input style={{width:'100%',background:'#1A1E28',border:`1px solid ${err?'#FF1744':'#7C4DFF'}`,borderRadius:6,padding:'10px 12px',color:'#E8EAF0',fontFamily:'Syne',fontSize:13,outline:'none'}} type="password" placeholder="••••••••" value={pw} onChange={e=>{setPw(e.target.value);setErr("");}} onKeyDown={e=>e.key==='Enter'&&(pw===ADMIN_PASSWORD?onSuccess():setErr("Parolă incorectă."))}/>
+</div>
+<button style={{width:'100%',padding:11,fontSize:14,background:'#7C4DFF',color:'#fff',border:'none',borderRadius:6,cursor:'pointer',fontFamily:'Syne',fontWeight:700}} onClick={()=>pw===ADMIN_PASSWORD?onSuccess():setErr("Parolă incorectă.")}>🔓 Intră în Admin</button>
+<div style={{fontSize:10,color:'#555D75',fontFamily:'Space Mono',textAlign:'center',marginTop:14}}>Parola implicită: <code>Arad2026Admin!</code></div>
+</div></div>;}
+
+function AdminDashboard({issues,onResolve,onDelete,onLogout}){
+const[tab,setTab]=useState("all"),[search,setSearch]=useState("");
+const filtered=issues.filter(i=>tab==="all"||i.status===tab).filter(i=>!search||i.title.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>b.votes-a.votes);
+const active=issues.filter(i=>i.status==='active'),resolved=issues.filter(i=>i.status==='resolved');
+return <div style={{flex:1,overflowY:'auto',padding:20}}>
+<div style={{background:'linear-gradient(135deg,rgba(124,77,255,.18),rgba(0,229,255,.08))',border:'1px solid rgba(124,77,255,.3)',borderRadius:10,padding:20,marginBottom:20,display:'flex',alignItems:'center',gap:16}}>
+<div style={{flex:1}}><div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}><div style={{fontSize:22,fontWeight:800,color:'#E8EAF0'}}>🛡️ Admin Dashboard</div><span style={{background:'#7C4DFF',color:'#fff',fontSize:10,fontFamily:'Space Mono',padding:'3px 10px',borderRadius:20,fontWeight:700}}>ADMIN</span></div>
+<div style={{fontSize:12,color:'#555D75',fontFamily:'Space Mono'}}>{new Date().toLocaleDateString('ro-RO')} · UrbanFix Arad</div></div>
+<div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+<button style={{background:'linear-gradient(135deg,#1D6F42,#217346)',color:'#fff',border:'none',borderRadius:6,padding:'9px 18px',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'Syne'}} onClick={()=>exportCSV(filtered)}>📥 Descarcă Excel</button>
+<button style={{background:'#1A1E28',color:'#8B92A8',border:'1px solid #2A2F3E',borderRadius:6,padding:'5px 10px',fontSize:11,fontWeight:700,cursor:'pointer',fontFamily:'Syne'}} onClick={onLogout}>🚪 Ieși</button>
+</div></div>
+<div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:20}}>
+{[[active.length,'#FF1744','Active'],[resolved.length,'#00E676','Rezolvate'],[issues.reduce((a,i)=>a+i.votes,0),'#00E5FF','Voturi'],[Math.round(resolved.length/Math.max(issues.length,1)*100)+'%','#7C4DFF','Rezolvare']].map(([v,c,l],i)=><div key={i} style={{background:'#12151C',border:'1px solid #2A2F3E',borderRadius:10,padding:16}}><div style={{fontSize:28,fontWeight:800,fontFamily:'Space Mono',color:c}}>{v}</div><div style={{fontSize:11,color:'#555D75',marginTop:4,textTransform:'uppercase',letterSpacing:'.8px'}}>{l}</div></div>)}
+</div>
+<div style={{display:'flex',gap:10,marginBottom:16,flexWrap:'wrap',alignItems:'center'}}>
+<input style={{flex:1,minWidth:180,background:'#1A1E28',border:'1px solid #2A2F3E',borderRadius:6,padding:'10px 12px',color:'#E8EAF0',fontFamily:'Syne',fontSize:13,outline:'none'}} placeholder="🔍 Caută..." value={search} onChange={e=>setSearch(e.target.value)}/>
+<div style={{display:'flex',gap:6}}>{[["all","Toate"],["active","🔴 Active"],["resolved","✅ Rezolvate"]].map(([v,l])=><button key={v} style={{padding:'5px 10px',fontSize:11,background:tab===v?'#FF6B35':'#1A1E28',color:tab===v?'#fff':'#8B92A8',border:'1px solid #2A2F3E',borderRadius:6,cursor:'pointer',fontFamily:'Syne',fontWeight:700}} onClick={()=>setTab(v)}>{l}</button>)}</div>
+</div>
+<div style={{background:'#12151C',border:'1px solid #2A2F3E',borderRadius:10,overflow:'hidden',marginBottom:20,overflowX:'auto'}}>
+<table style={{width:'100%',borderCollapse:'collapse'}}>
+<thead><tr>{['Categorie','Titlu','GPS','Data','Status','Voturi','Acțiuni'].map(h=><th key={h} style={{background:'#1A1E28',padding:'10px 14px',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'.8px',color:'#555D75',fontFamily:'Space Mono',textAlign:'left',borderBottom:'1px solid #2A2F3E'}}>{h}</th>)}</tr></thead>
+<tbody>{filtered.length===0?<tr><td colSpan={7} style={{textAlign:'center',padding:32,color:'#555D75'}}>Nu există rapoarte.</td></tr>:filtered.map(issue=>{const t=ISSUE_TYPES.find(x=>x.id===issue.type)||ISSUE_TYPES[0];return <tr key={issue.id}>
+<td style={{padding:'12px 14px',borderBottom:'1px solid #2A2F3E'}}><span style={{display:'inline-flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:20,fontSize:10,fontFamily:'Space Mono',fontWeight:700,background:t.color+"22",color:t.color}}>{t.icon} {t.label}</span></td>
+<td style={{padding:'12px 14px',borderBottom:'1px solid #2A2F3E'}}><div style={{fontWeight:700,fontSize:13,color:'#E8EAF0'}}>{issue.title}</div><div style={{fontSize:11,color:'#8B92A8',fontFamily:'Space Mono'}}>{(issue.desc||"").slice(0,50)}</div></td>
+<td style={{padding:'12px 14px',borderBottom:'1px solid #2A2F3E'}}><div style={{fontSize:10,fontFamily:'Space Mono',color:'#555D75'}}>{issue.lat.toFixed(4)}°N</div><div style={{fontSize:10,fontFamily:'Space Mono',color:'#555D75'}}>{issue.lng.toFixed(4)}°E</div></td>
+<td style={{padding:'12px 14px',borderBottom:'1px solid #2A2F3E',fontFamily:'Space Mono',fontSize:11,color:'#E8EAF0'}}>{issue.date}</td>
+<td style={{padding:'12px 14px',borderBottom:'1px solid #2A2F3E'}}><span style={{padding:'2px 8px',borderRadius:20,fontSize:10,fontFamily:'Space Mono',fontWeight:700,background:issue.status==='resolved'?'rgba(0,230,118,.15)':'rgba(255,107,53,.15)',color:issue.status==='resolved'?'#00E676':'#FF6B35'}}>{issue.status==='resolved'?'✅':'🔴'}</span></td>
+<td style={{padding:'12px 14px',borderBottom:'1px solid #2A2F3E',fontFamily:'Space Mono',fontWeight:700,color:'#FF6B35'}}>{issue.votes}▲</td>
+<td style={{padding:'12px 14px',borderBottom:'1px solid #2A2F3E'}}><div style={{display:'flex',gap:6}}>
+{issue.status==='active'&&<button style={{padding:'5px 10px',fontSize:11,background:'rgba(0,230,118,.12)',color:'#00E676',border:'1px solid rgba(0,230,118,.3)',borderRadius:6,cursor:'pointer',fontFamily:'Syne',fontWeight:700}} onClick={()=>onResolve(issue.id)}>✅</button>}
+<button style={{padding:'5px 10px',fontSize:11,background:'rgba(255,23,68,.12)',color:'#FF1744',border:'1px solid rgba(255,23,68,.3)',borderRadius:6,cursor:'pointer',fontFamily:'Syne',fontWeight:700}} onClick={()=>onDelete(issue.id)}>🗑️</button>
+</div></td>
+</tr>;})}</tbody>
+</table></div></div>;}
+
+export default function App(){
+const[page,setPage]=useState("map"),[issues,setIssues]=useState(INIT),[pendingPin,setPendingPin]=useState(null),[showForm,setShowForm]=useState(false),[nearbyIssue,setNearbyIssue]=useState(null),[selIssue,setSelIssue]=useState(null),[votedIds,setVotedIds]=useState([]),[filter,setFilter]=useState("all"),[toast,setToast]=useState(null),[adminAuthed,setAdminAuthed]=useState(false),[rateSecs,setRateSecs]=useState(()=>getRateSecs());
+const rl=rateSecs>0;
+useEffect(()=>{if(rateSecs<=0)return;const id=setInterval(()=>setRateSecs(s=>{if(s<=1){clearInterval(id);return 0;}return s-1;}),1000);return()=>clearInterval(id);},[rateSecs]);
+const toast2=(msg,icon,variant="")=>setToast({msg,icon,variant,key:Date.now()});
+const handleMapClick=coords=>{if(rl){toast2("Te rugăm să aștepți un minut.","⏱️");return;}const nearby=issues.find(i=>i.status==='active'&&haversine(coords.lat,coords.lng,i.lat,i.lng)<=20);setNearbyIssue(nearby||null);setPendingPin(coords);setShowForm(true);};
+const handleSubmit=data=>{if(rl)return;setIssues(p=>[{id:Date.now(),...data,votes:0,status:"active",date:new Date().toISOString().split("T")[0],comments:0},...p]);setShowForm(false);setPendingPin(null);setNearbyIssue(null);stampRate();setRateSecs(60);toast2("Problemă raportată!","🚨");};
+const handleVote=id=>{const a=votedIds.includes(id);setVotedIds(p=>a?p.filter(v=>v!==id):[...p,id]);setIssues(p=>p.map(i=>i.id===id?{...i,votes:i.votes+(a?-1:1)}:i));if(!a)toast2("Vot înregistrat!","▲");};
+const handleResolve=id=>{setIssues(p=>p.map(i=>i.id===id?{...i,status:'resolved',resolvedDate:new Date().toISOString().split('T')[0]}:i));setSelIssue(null);toast2("Rezolvat!","✅");};
+const handleDelete=id=>{setIssues(p=>p.filter(i=>i.id!==id));toast2("Șters.","🗑️");};
+const activeIssues=issues.filter(i=>i.status==='active'),resolvedIssues=issues.filter(i=>i.status==='resolved');
+const displayIssues=(page==="resolved"?resolvedIssues:activeIssues).filter(i=>filter==='all'||i.type===filter).sort((a,b)=>b.votes-a.votes);
+const navItems=[{id:"map",icon:"🗺️",label:"Hartă",badge:activeIssues.length},{id:"issues",icon:"📋",label:"Probleme"},{id:"resolved",icon:"✅",label:"Rezolvate",badge:resolvedIssues.length},{id:"reports",icon:"📊",label:"Rapoarte"},{id:"_sep"},{id:"admin",icon:"🛡️",label:"Admin",badge:activeIssues.length,adm:true}];
+return <>
+<style>{`*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html,body,#root{height:100%;background:#0A0C10;color:#E8EAF0;font-family:'Syne',sans-serif}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#12151C}::-webkit-scrollbar-thumb{background:#2A2F3E;border-radius:2px}`}</style>
+<div style={{display:'flex',height:'100vh',overflow:'hidden'}}>
+<div style={{width:248,minWidth:248,background:'#12151C',borderRight:'1px solid #2A2F3E',display:'flex',flexDirection:'column',zIndex:10}}>
+<div style={{padding:'18px 20px',borderBottom:'1px solid #2A2F3E'}}><div style={{fontSize:20,fontWeight:800,letterSpacing:'-.5px',color:'#E8EAF0'}}>Urban<span style={{color:'#FF6B35'}}>Fix</span></div><div style={{fontSize:10,color:'#555D75',fontFamily:'Space Mono',marginTop:2,letterSpacing:1,textTransform:'uppercase'}}>Arad · Acces anonim</div></div>
+<div style={{padding:'10px 0',flex:1}}>
+{navItems.map((item,i)=>{
+if(item.id==='_sep')return <div key={i} style={{height:1,background:'#2A2F3E',margin:'8px 12px'}}/>;
+const isActive=page===item.id;
+return <div key={item.id} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 20px',cursor:'pointer',color:isActive?(item.adm?'#7C4DFF':'#FF6B35'):'#8B92A8',fontSize:13,fontWeight:600,transition:'all .15s',borderLeft:`3px solid ${isActive?(item.adm?'#7C4DFF':'#FF6B35'):'transparent'}`,background:isActive?(item.adm?'rgba(124,77,255,.12)':'rgba(255,107,53,.08)'):'transparent'}} onClick={()=>setPage(item.id)}>
+<span style={{fontSize:16,width:20,textAlign:'center'}}>{item.icon}</span>
+<span>{item.label}</span>
+{item.badge>0&&<span style={{marginLeft:'auto',background:item.adm?'#7C4DFF':'#FF6B35',color:'#fff',fontSize:10,fontFamily:'Space Mono',padding:'2px 6px',borderRadius:10,fontWeight:700}}>{item.badge}</span>}
+</div>;})}
+</div>
+<div style={{padding:14,borderTop:'1px solid #2A2F3E'}}>
+<div style={{display:'flex',alignItems:'center',gap:8,background:'#1A1E28',border:'1px solid #2A2F3E',borderRadius:6,padding:'8px 12px'}}>
+<div style={{width:7,height:7,borderRadius:'50%',background:page==='admin'&&adminAuthed?'#7C4DFF':rl?'#FF1744':'#00E676',flexShrink:0}}/>
+<div style={{fontSize:11,fontFamily:'Space Mono',color:'#555D75'}}><strong style={{color:'#00E5FF',display:'block',fontSize:12}}>{page==='admin'&&adminAuthed?'Admin activ':rl?`Blocat ${rateSecs}s`:'Acces anonim'}</strong>{rl?'Așteptați':'1 raport / min / IP'}</div>
+</div></div>
+</div>
+<div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+<div style={{height:56,minHeight:56,background:'#12151C',borderBottom:'1px solid #2A2F3E',display:'flex',alignItems:'center',padding:'0 20px',gap:10}}>
+<div style={{fontSize:15,fontWeight:700,flex:1,color:'#E8EAF0'}}>{{map:"🗺️ Hartă — Arad",issues:"📋 Probleme Raportate",resolved:"✅ Probleme Rezolvate",reports:"📊 Rapoarte",admin:adminAuthed?"🛡️ Admin Dashboard":"🛡️ Admin Portal"}[page]}</div>
+{!page.includes('admin')&&rl&&<div style={{fontSize:12,fontFamily:'Space Mono',color:'#FF1744',background:'rgba(255,23,68,.1)',border:'1px solid rgba(255,23,68,.3)',borderRadius:6,padding:'4px 10px'}}>⏱️ {rateSecs}s</div>}
+{!page.includes('admin')&&<button style={{padding:'7px 16px',background:rl?'rgba(255,107,53,.4)':'#FF6B35',color:'#fff',border:'none',borderRadius:6,cursor:rl?'not-allowed':'pointer',fontFamily:'Syne',fontWeight:700,fontSize:12,opacity:rl?.6:1}} disabled={rl} onClick={()=>{setPage('map');if(!rl)toast2("Click pe hartă pentru a plasa un pin!","📍");}}>＋ Raportează</button>}
+{page==='admin'&&adminAuthed&&<button style={{background:'linear-gradient(135deg,#1D6F42,#217346)',color:'#fff',border:'none',borderRadius:6,padding:'5px 10px',fontSize:11,fontWeight:700,cursor:'pointer',fontFamily:'Syne'}} onClick={()=>exportCSV(issues)}>📥 Excel</button>}
+</div>
+
+{page==="admin"&&(adminAuthed?<AdminDashboard issues={issues} onResolve={handleResolve} onDelete={handleDelete} onLogout={()=>{setAdminAuthed(false);setPage('map');}}/>:<AdminLogin onSuccess={()=>setAdminAuthed(true)}/>)}
+
+{page==="map"&&<div style={{flex:1,overflowY:'auto',padding:20}}>
+{rl&&<div style={{display:'flex',alignItems:'center',gap:12,background:'rgba(255,23,68,.1)',border:'1px solid rgba(255,23,68,.35)',borderRadius:10,padding:'12px 16px',marginBottom:16}}><span style={{fontSize:22}}>⏱️</span><div style={{flex:1}}><strong style={{display:'block',fontSize:13,color:'#FF1744',marginBottom:2}}>Limită atinsă</strong><span style={{fontSize:12,color:'#8B92A8',fontFamily:'Space Mono'}}>Te rugăm să aștepți un minut între raportări.</span></div><div style={{fontSize:24,fontWeight:800,fontFamily:'Space Mono',color:'#FF1744'}}>{rateSecs}s</div></div>}
+<div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:20}}>
+{[[activeIssues.length,'#FF6B35','Active'],[resolvedIssues.length,'#00E676','Rezolvate'],[issues.reduce((a,i)=>a+i.votes,0),'#00E5FF','Voturi'],[rl?`${rateSecs}s`:'✓ OK',rl?'#FF1744':'#00E676','Rate limit']].map(([v,c,l],i)=><div key={i} style={{background:'#12151C',border:'1px solid #2A2F3E',borderRadius:10,padding:16}}><div style={{fontSize:i===3?22:28,fontWeight:800,fontFamily:'Space Mono',color:c}}>{v}</div><div style={{fontSize:11,color:'#555D75',marginTop:4,textTransform:'uppercase',letterSpacing:'.8px'}}>{l}</div></div>)}
+</div>
+<div style={{position:'relative',background:'#1A1E28',borderRadius:10,overflow:'hidden',border:'1px solid #2A2F3E',marginBottom:20}}>
+<FakeMap issues={issues} onMapClick={handleMapClick} pendingPin={pendingPin} selId={selIssue?.id} onSel={setSelIssue} rateLimited={rl} rateSecs={rateSecs}/>
+</div>
+<div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+<div style={{fontSize:13,fontWeight:700,textTransform:'uppercase',letterSpacing:1,color:'#8B92A8'}}>Cele mai votate active</div>
+<button style={{padding:'5px 10px',fontSize:11,background:'#1A1E28',color:'#8B92A8',border:'1px solid #2A2F3E',borderRadius:6,cursor:'pointer',fontFamily:'Syne',fontWeight:700}} onClick={()=>setPage('issues')}>Vezi toate →</button>
+</div>
+{[...activeIssues].sort((a,b)=>b.votes-a.votes).slice(0,3).map(issue=><div key={issue.id} style={{background:'#12151C',border:`1px solid ${selIssue?.id===issue.id?'#FF6B35':'#2A2F3E'}`,borderRadius:10,padding:14,marginBottom:10,cursor:'pointer',display:'flex',gap:14,background:selIssue?.id===issue.id?'rgba(255,107,53,.06)':'#12151C'}} onClick={()=>setSelIssue(issue)}>
+<div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4,minWidth:40}}>
+<div style={{width:28,height:28,borderRadius:'50%',background:votedIds.includes(issue.id)?'#FF6B35':'#222736',border:'1px solid #2A2F3E',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:14}} onClick={e=>{e.stopPropagation();handleVote(issue.id);}}>▲</div>
+<div style={{fontSize:18,fontWeight:800,fontFamily:'Space Mono',color:'#E8EAF0'}}>{issue.votes}</div>
+<div style={{fontSize:9,color:'#555D75',fontFamily:'Space Mono',textTransform:'uppercase'}}>voturi</div>
+</div>
+<div style={{flex:1,minWidth:0}}>
+<div style={{marginBottom:6}}><TypeBadge typeId={issue.type}/></div>
+<div style={{fontSize:14,fontWeight:700,marginBottom:4,lineHeight:1.3,color:'#E8EAF0'}}>{issue.title}</div>
+<div style={{fontSize:12,color:'#8B92A8',lineHeight:1.5,marginBottom:8,overflow:'hidden',textOverflow:'ellipsis',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical'}}>{issue.desc}</div>
+<div style={{display:'flex',alignItems:'center',gap:10,fontSize:11,color:'#555D75',fontFamily:'Space Mono'}}>
+<span>📅 {issue.date}</span><span style={{color:'#2A2F3E'}}>·</span><span>💬 {issue.comments||0}</span>
+</div></div></div>)}
+</div>}
+
+{(page==="issues"||page==="resolved")&&<div style={{flex:1,overflowY:'auto',padding:20}}>
+<div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:14}}>
+<div style={{padding:'4px 10px',borderRadius:20,border:`1px solid ${filter==='all'?'#FF6B35':'#2A2F3E'}`,background:filter==='all'?'#222736':'transparent',color:filter==='all'?'#E8EAF0':'#8B92A8',fontSize:11,fontFamily:'Space Mono',cursor:'pointer'}} onClick={()=>setFilter('all')}>Toate</div>
+{ISSUE_TYPES.map(t=><div key={t.id} style={{padding:'4px 10px',borderRadius:20,border:`1px solid ${filter===t.id?'#FF6B35':'#2A2F3E'}`,background:filter===t.id?'#222736':'transparent',color:filter===t.id?'#E8EAF0':'#8B92A8',fontSize:11,fontFamily:'Space Mono',cursor:'pointer'}} onClick={()=>setFilter(t.id)}>{t.icon} {t.label}</div>)}
+</div>
+<div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+<div style={{fontSize:13,fontWeight:700,textTransform:'uppercase',letterSpacing:1,color:'#8B92A8'}}>{page==="resolved"?`✅ ${resolvedIssues.length} rezolvate`:`🔴 ${displayIssues.length} active`}</div>
+<div style={{fontSize:11,color:'#555D75',fontFamily:'Space Mono'}}>Sortat: cele mai votate</div>
+</div>
+{displayIssues.length===0?<div style={{textAlign:'center',padding:40,color:'#555D75'}}><div style={{fontSize:40,marginBottom:8}}>🎉</div><div style={{fontSize:13}}>Nu există probleme</div></div>:
+displayIssues.map(issue=><div key={issue.id} style={{background:selIssue?.id===issue.id?'rgba(255,107,53,.06)':'#12151C',border:`1px solid ${selIssue?.id===issue.id?'#FF6B35':'#2A2F3E'}`,borderRadius:10,padding:14,marginBottom:10,cursor:'pointer',display:'flex',gap:14}} onClick={()=>setSelIssue(issue)}>
+<div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4,minWidth:40}}>
+<div style={{width:28,height:28,borderRadius:'50%',background:votedIds.includes(issue.id)?'#FF6B35':'#222736',border:'1px solid #2A2F3E',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:14}} onClick={e=>{e.stopPropagation();handleVote(issue.id);}}>▲</div>
+<div style={{fontSize:18,fontWeight:800,fontFamily:'Space Mono',color:'#E8EAF0'}}>{issue.votes}</div>
+<div style={{fontSize:9,color:'#555D75',fontFamily:'Space Mono',textTransform:'uppercase'}}>voturi</div>
+</div>
+<div style={{flex:1,minWidth:0}}>
+<div style={{display:'flex',alignItems:'flex-start',gap:8,marginBottom:6,flexWrap:'wrap'}}>
+<TypeBadge typeId={issue.type}/>
+<span style={{padding:'2px 8px',borderRadius:20,fontSize:10,fontFamily:'Space Mono',fontWeight:700,background:issue.status==='resolved'?'rgba(0,230,118,.15)':'rgba(255,107,53,.15)',color:issue.status==='resolved'?'#00E676':'#FF6B35'}}>{issue.status==='resolved'?'✅ Rezolvat':'🔴 Activ'}</span>
+</div>
+<div style={{fontSize:14,fontWeight:700,marginBottom:4,lineHeight:1.3,color:'#E8EAF0'}}>{issue.title}</div>
+<div style={{fontSize:12,color:'#8B92A8',lineHeight:1.5,marginBottom:8,overflow:'hidden',textOverflow:'ellipsis',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical'}}>{issue.desc}</div>
+<div style={{display:'flex',alignItems:'center',gap:10,fontSize:11,color:'#555D75',fontFamily:'Space Mono',flexWrap:'wrap'}}>
+<span>📅 {issue.date}</span><span style={{color:'#2A2F3E'}}>·</span><span>💬 {issue.comments||0}</span>
+{issue.resolvedDate&&<><span style={{color:'#2A2F3E'}}>·</span><span style={{color:'#00E676'}}>✅ {issue.resolvedDate}</span></>}
+</div></div></div>)}
+</div>}
+
+{page==="reports"&&<div style={{flex:1,overflowY:'auto',padding:20}}>
+<div style={{background:'linear-gradient(135deg,rgba(124,77,255,.15),rgba(0,229,255,.08))',border:'1px solid #2A2F3E',borderRadius:10,padding:20,marginBottom:20}}>
+<div style={{fontSize:22,fontWeight:800,marginBottom:4,color:'#E8EAF0'}}>📊 Raport Lunar — Martie 2026</div>
+<div style={{fontSize:12,color:'#555D75',fontFamily:'Space Mono',textTransform:'uppercase',letterSpacing:'.8px'}}>Generat automat · Arad, România</div>
+</div>
+<div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:20}}>
+{[[activeIssues.length,'#FF6B35','Active'],[resolvedIssues.length,'#00E676','Rezolvate'],[issues.reduce((a,i)=>a+i.votes,0),'#00E5FF','Voturi'],['1/min','#FFD600','Rate limit']].map(([v,c,l],i)=><div key={i} style={{background:'#12151C',border:'1px solid #2A2F3E',borderRadius:10,padding:16}}><div style={{fontSize:i===3?16:28,fontWeight:800,fontFamily:'Space Mono',color:c,paddingTop:i===3?4:0}}>{v}</div><div style={{fontSize:11,color:'#555D75',marginTop:4,textTransform:'uppercase',letterSpacing:'.8px'}}>{l}</div></div>)}
+</div>
+<div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+<div style={{background:'#12151C',border:'1px solid #2A2F3E',borderRadius:10,padding:16}}>
+<div style={{fontSize:11,color:'#555D75',fontFamily:'Space Mono',textTransform:'uppercase',letterSpacing:'.8px',marginBottom:12}}>Distribuție pe tip</div>
+{ISSUE_TYPES.map(t=>{const count=issues.filter(i=>i.type===t.id).length,max=Math.max(...ISSUE_TYPES.map(tt=>issues.filter(i=>i.type===tt.id).length),1);if(count===0)return null;return <div key={t.id} style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}><div style={{fontSize:11,fontFamily:'Space Mono',color:'#8B92A8',width:130,flexShrink:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{t.icon} {t.label}</div><div style={{flex:1,height:8,background:'#222736',borderRadius:4,overflow:'hidden'}}><div style={{height:'100%',borderRadius:4,background:t.color,width:`${(count/max)*100}%`}}/></div><div style={{fontSize:11,fontFamily:'Space Mono',color:'#8B92A8',width:28,textAlign:'right'}}>{count}</div></div>;})}
+</div>
+<div style={{background:'#12151C',border:'1px solid #2A2F3E',borderRadius:10,padding:16}}>
+<div style={{fontSize:11,color:'#555D75',fontFamily:'Space Mono',textTransform:'uppercase',letterSpacing:'.8px',marginBottom:12}}>Recomandări AI</div>
+{[["⚠️","Bd. Revoluției — inspecție urgentă.","#FF1744"],["🔓","Sistem anonim funcționează corect.","#00E5FF"],["✅","Rata rezolvare bună.","#00E676"]].map((r,i)=><div key={i} style={{display:'flex',gap:10,padding:'10px 0',borderBottom:i<2?'1px solid #2A2F3E':''}}><span style={{fontSize:20}}>{r[0]}</span><div style={{fontSize:12,color:'#8B92A8',lineHeight:1.5}}>{r[1]}</div></div>)}
+</div>
+</div>
+</div>}
+
+</div>
+</div>
+{showForm&&pendingPin&&<ReportForm pin={pendingPin} onClose={()=>{setShowForm(false);setPendingPin(null);setNearbyIssue(null);}} onSubmit={handleSubmit} rateLimited={rl} rateSecs={rateSecs} nearbyIssue={nearbyIssue} onVoteExisting={handleVote}/>}
+{selIssue&&<IssueDetail issue={selIssue} onClose={()=>setSelIssue(null)} onVote={handleVote} onResolve={handleResolve} votedIds={votedIds}/>}
+{toast&&<Toast key={toast.key} msg={toast.msg} icon={toast.icon} variant={toast.variant} onDone={()=>setToast(null)}/>}
+</>;
+}
+
+const container=document.getElementById('root');
+const root=ReactDOM.createRoot(container);
+root.render(React.createElement(App));
 </script>
 </body>
 </html>
-
