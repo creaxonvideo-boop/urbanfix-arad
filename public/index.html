@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UrbanFix Arad</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0C10;color:#E8EAF0;font-family:'Segoe UI',sans-serif;height:100vh;display:flex;align-items:center;justify-content:center}
+.app{text-align:center;padding:40px}
+.logo{font-size:64px;margin-bottom:16px}
+.title{font-size:36px;font-weight:800;margin-bottom:8px}
+.title span{color:#FF6B35}
+.sub{font-size:13px;color:#555D75;margin-bottom:32px;font-family:monospace;letter-spacing:1px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:400px;margin:0 auto 24px}
+.card{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:16px;text-align:center}
+.card-val{font-size:28px;font-weight:800;font-family:monospace}
+.card-lbl{font-size:10px;color:#555D75;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.status{font-size:11px;color:#555D75;font-family:monospace;margin-top:16px}
+.status span{color:#00E676}
+.dot{width:8px;height:8px;border-radius:50%;background:#00E676;display:inline-block;margin-right:6px;animation:bl 2s infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="logo">🏙️</div>
+  <div class="title">Urban<span>Fix</span> Arad</div>
+  <div class="sub">SISTEM DE RAPORTARE PROBLEME URBANE · ARAD · ROMÂNIA</div>
+  <div class="cards">
+    <div class="card"><div class="card-val" id="active" style="color:#FF6B35">-</div><div class="card-lbl">Probleme active</div></div>
+    <div class="card"><div class="card-val" id="resolved" style="color:#00E676">-</div><div class="card-lbl">Rezolvate</div></div>
+    <div class="card"><div class="card-val" id="votes" style="color:#00E5FF">-</div><div class="card-lbl">Total voturi</div></div>
+    <div class="card"><div class="card-val" id="total" style="color:#7C4DFF">-</div><div class="card-lbl">Total rapoarte</div></div>
+  </div>
+  <div class="status"><span class="dot"></span>Backend: <span>ONLINE</span> · urbanfix-arad.onrender.com</div>
+</div>
+<script>
+fetch('/api/reports?status=all')
+  .then(r=>r.json())
+  .then(data=>{
+    const issues=data.data||[];
+    const active=issues.filter(i=>i.status==='active');
+    const resolved=issues.filter(i=>i.status==='resolved');
+    document.getElementById('active').textContent=active.length;
+    document.getElementById('resolved').textContent=resolved.length;
+    document.getElementById('votes').textContent=issues.reduce((a,i)=>a+i.votes,0);
+    document.getElementById('total').textContent=issues.length;
+  })
+  .catch(()=>{});
+</script>
+</body>
+</html>
