@@ -126,8 +126,17 @@ app.get('/api/admin/export', requireAdmin, async (req,res) => {
     res.json({ count:rows.length, data:rows });
   } catch(err) { res.status(500).json({ error:'Eroare export.' }); }
 });
-const publicDir = path.join(__dirname, 'public');
-if (fs.existsSync(publicDir)) { app.use(express.static(publicDir, { maxAge:'1d' })); app.get('*', (req,res) => { if (!req.path.startsWith('/api')) res.sendFile(path.join(publicDir,'index.html')); }); }
+app.get('/', (req, res) => {
+  const publicDir = path.join(__dirname, 'public');
+  const indexFile = path.join(publicDir, 'index.html');
+  if (fs.existsSync(indexFile)) {
+    res.sendFile(indexFile);
+  } else {
+    res.send('<h1>UrbanFix Arad</h1><p>Frontend loading...</p>');
+  }
+});
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use((err,req,res,_next) => { const isDev = process.env.NODE_ENV !== 'production'; res.status(err.status||500).json({ error: isDev ? err.message : 'Eroare internă.' }); });
 async function startServer() {
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) { console.error('JWT_SECRET lipsă sau prea scurtă!'); process.exit(1); }
