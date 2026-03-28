@@ -4,388 +4,202 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>UrbanFix Arad</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#0A0C10;color:#E8EAF0;font-family:'Syne',sans-serif}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#12151C}::-webkit-scrollbar-thumb{background:#2A2F3E;border-radius:2px}
-.app{display:flex;height:100vh;overflow:hidden}
-.sidebar{width:240px;min-width:240px;background:#12151C;border-right:1px solid #2A2F3E;display:flex;flex-direction:column}
-.brand{padding:18px 20px;border-bottom:1px solid #2A2F3E;font-size:20px;font-weight:800;color:#E8EAF0}
-.brand span{color:#FF6B35}
-.nav{padding:10px 0;flex:1}
-.ni{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;color:#8B92A8;font-size:13px;font-weight:600;border-left:3px solid transparent}
+body{background:#0A0C10;color:#E8EAF0;font-family:sans-serif;min-height:100vh}
+.app{display:flex;height:100vh}
+.sidebar{width:220px;background:#12151C;border-right:1px solid #2A2F3E;padding:20px 0;display:flex;flex-direction:column}
+.brand{padding:0 20px 20px;font-size:18px;font-weight:800;border-bottom:1px solid #2A2F3E;margin-bottom:10px}
+.brand b{color:#FF6B35}
+.ni{padding:10px 20px;cursor:pointer;color:#8B92A8;font-size:13px;border-left:3px solid transparent}
 .ni:hover{color:#E8EAF0;background:#1A1E28}
-.ni.on{color:#FF6B35;background:rgba(255,107,53,.08);border-left-color:#FF6B35}
-.ni.adm.on{color:#7C4DFF;background:rgba(124,77,255,.12);border-left-color:#7C4DFF}
-.badge{margin-left:auto;background:#FF6B35;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:700;font-family:monospace}
-.badge.pu{background:#7C4DFF}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{height:56px;background:#12151C;border-bottom:1px solid #2A2F3E;display:flex;align-items:center;padding:0 20px;gap:10px}
-.topbar-title{flex:1;font-size:15px;font-weight:700}
-.btn{padding:7px 16px;border-radius:6px;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
-.btn-primary{background:#FF6B35;color:#fff}
-.btn-primary:hover{background:#ff7f50}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed}
-.btn-ghost{background:#1A1E28;color:#8B92A8;border:1px solid #2A2F3E}
-.btn-ghost:hover{color:#E8EAF0}
-.btn-green{background:rgba(0,230,118,.12);color:#00E676;border:1px solid rgba(0,230,118,.3)}
-.btn-red{background:rgba(255,23,68,.12);color:#FF1744;border:1px solid rgba(255,23,68,.3)}
-.btn-pu{background:#7C4DFF;color:#fff}
+.ni.on{color:#FF6B35;border-left-color:#FF6B35;background:rgba(255,107,53,.08)}
+.main{flex:1;display:flex;flex-direction:column}
+.topbar{height:52px;background:#12151C;border-bottom:1px solid #2A2F3E;display:flex;align-items:center;padding:0 20px;gap:10px}
+.topbar h2{flex:1;font-size:14px}
+.btn{padding:7px 14px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:700}
+.btn-p{background:#FF6B35;color:#fff}
+.btn-g{background:#1A1E28;color:#8B92A8;border:1px solid #2A2F3E}
+.btn-gr{background:rgba(0,230,118,.12);color:#00E676;border:1px solid rgba(0,230,118,.3)}
+.btn-rd{background:rgba(255,23,68,.12);color:#FF1744;border:1px solid rgba(255,23,68,.3)}
 .page{flex:1;overflow-y:auto;padding:20px}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.stat{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:16px}
-.stat-val{font-size:28px;font-weight:800;font-family:monospace}
-.stat-lbl{font-size:11px;color:#555D75;margin-top:4px;text-transform:uppercase;letter-spacing:.8px}
-.map-wrap{background:#1A1E28;border-radius:10px;overflow:hidden;border:1px solid #2A2F3E;margin-bottom:20px;position:relative}
-.map-canvas{width:100%;height:360px;position:relative;overflow:hidden;background:#1a1f2e;cursor:crosshair}
-.map-pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;z-index:2}
-.map-pin:hover{z-index:3}
-.pin-body{width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.3);box-shadow:0 2px 8px rgba(0,0,0,.5)}
-.pin-icon{transform:rotate(45deg);font-size:12px}
-.pin-votes{position:absolute;top:-8px;right:-8px;background:#FF6B35;color:#fff;font-size:9px;font-family:monospace;font-weight:700;padding:1px 4px;border-radius:8px;min-width:18px;text-align:center}
-.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#8B92A8}
-.icard{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:14px;margin-bottom:10px;cursor:pointer;display:flex;gap:14px;transition:all .15s}
-.icard:hover,.icard.sel{border-color:#FF6B35;background:rgba(255,107,53,.04)}
-.vote-col{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:40px}
-.vote-btn{width:28px;height:28px;border-radius:50%;background:#222736;border:1px solid #2A2F3E;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
-.vote-btn:hover,.vote-btn.voted{background:#FF6B35;border-color:#FF6B35}
-.vote-count{font-size:18px;font-weight:800;font-family:monospace;color:#E8EAF0}
-.vote-lbl{font-size:9px;color:#555D75;font-family:monospace;text-transform:uppercase}
-.ibody{flex:1;min-width:0}
-.itag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-family:monospace;font-weight:700}
-.ititle{font-size:14px;font-weight:700;margin:6px 0 4px;color:#E8EAF0;line-height:1.3}
-.idesc{font-size:12px;color:#8B92A8;line-height:1.5;margin-bottom:8px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.imeta{display:flex;align-items:center;gap:10px;font-size:11px;color:#555D75;font-family:monospace;flex-wrap:wrap}
-.sbadge{padding:2px 8px;border-radius:20px;font-size:10px;font-family:monospace;font-weight:700}
-.sbadge.act{background:rgba(255,107,53,.15);color:#FF6B35}
-.sbadge.res{background:rgba(0,230,118,.15);color:#00E676}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.chip{padding:4px 10px;border-radius:20px;border:1px solid #2A2F3E;background:transparent;color:#8B92A8;font-size:11px;font-family:monospace;cursor:pointer}
-.chip:hover,.chip.on{background:#222736;color:#E8EAF0;border-color:#FF6B35}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
-.dialog{background:#12151C;border:1px solid #2A2F3E;border-radius:16px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;box-shadow:0 4px 24px rgba(0,0,0,.55)}
-.dialog-hdr{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.dialog-title{font-size:18px;font-weight:800;color:#E8EAF0}
-.dialog-close{width:32px;height:32px;border-radius:50%;background:#1A1E28;border:1px solid #2A2F3E;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#8B92A8}
-.dialog-body{padding:0 20px 20px}
-.fg{margin-bottom:16px}
-.fl{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#555D75;margin-bottom:6px;font-family:monospace}
-.fi{width:100%;background:#1A1E28;border:1px solid #2A2F3E;border-radius:6px;padding:10px 12px;color:#E8EAF0;font-family:'Syne',sans-serif;font-size:13px;outline:none}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.card{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:16px}
+.card .val{font-size:28px;font-weight:800}
+.card .lbl{font-size:11px;color:#555D75;margin-top:4px;text-transform:uppercase}
+.map{background:#1A1E28;border:1px solid #2A2F3E;border-radius:10px;height:320px;position:relative;overflow:hidden;cursor:crosshair;margin-bottom:20px}
+.pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;font-size:20px}
+.icard{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:14px;margin-bottom:10px;cursor:pointer;display:flex;gap:12px}
+.icard:hover{border-color:#FF6B35;background:rgba(255,107,53,.04)}
+.votes{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:40px}
+.vbtn{width:28px;height:28px;border-radius:50%;background:#1A1E28;border:1px solid #2A2F3E;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.vbtn.on{background:#FF6B35;border-color:#FF6B35}
+.vnum{font-size:16px;font-weight:800;color:#E8EAF0}
+.ibody{flex:1}
+.ititle{font-size:14px;font-weight:700;margin-bottom:4px;color:#E8EAF0}
+.idesc{font-size:12px;color:#8B92A8;margin-bottom:6px}
+.imeta{font-size:11px;color:#555D75}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;margin-right:4px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.dialog{background:#12151C;border:1px solid #2A2F3E;border-radius:16px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;padding:24px}
+.dialog h3{font-size:18px;margin-bottom:20px;color:#E8EAF0}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:11px;color:#555D75;margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px}
+.fi{width:100%;background:#1A1E28;border:1px solid #2A2F3E;border-radius:6px;padding:10px;color:#E8EAF0;font-size:13px;outline:none}
 .fi:focus{border-color:#FF6B35}
-.ftxt{resize:vertical;min-height:80px}
-.type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.type-opt{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:6px;border:1px solid #2A2F3E;cursor:pointer;background:#1A1E28;font-size:12px;font-weight:600;color:#E8EAF0}
-.type-opt:hover{background:#222736}
-.type-opt.on{background:rgba(255,255,255,.05)}
-.coord-box{background:#222736;border-radius:6px;padding:8px 12px;font-size:11px;font-family:monospace;color:#00E5FF;display:flex;align-items:center;gap:6px;margin-bottom:16px}
-.note{font-size:11px;color:#555D75;font-family:monospace;margin-bottom:14px;line-height:1.6;background:#1A1E28;border-radius:6px;padding:8px 12px;border:1px solid #2A2F3E}
-.toast{position:fixed;bottom:20px;right:20px;background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:12px 16px;font-size:13px;z-index:200;display:flex;align-items:center;gap:8px;box-shadow:0 4px 24px rgba(0,0,0,.55);color:#E8EAF0;animation:ts .3s ease}
-@keyframes ts{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
-.rate-banner{display:flex;align-items:center;gap:12px;background:rgba(255,23,68,.1);border:1px solid rgba(255,23,68,.35);border-radius:10px;padding:12px 16px;margin-bottom:16px}
-.adm-gate{display:flex;align-items:center;justify-content:center;height:100%;padding:20px}
-.adm-card{background:#12151C;border:1px solid #7C4DFF;border-radius:16px;padding:36px;width:100%;max-width:380px;box-shadow:0 0 40px rgba(124,77,255,.2)}
-.adm-err{background:rgba(255,23,68,.12);border:1px solid rgba(255,23,68,.35);border-radius:6px;padding:10px 14px;font-size:12px;color:#FF1744;font-family:monospace;margin-bottom:14px;text-align:center}
-.tbl{width:100%;border-collapse:collapse}
-.tbl th{background:#1A1E28;padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#555D75;font-family:monospace;text-align:left;border-bottom:1px solid #2A2F3E}
-.tbl td{padding:12px 14px;font-size:12px;border-bottom:1px solid #2A2F3E;color:#E8EAF0;vertical-align:middle}
-.tbl tr:hover td{background:#1A1E28}
-@media(max-width:680px){.app{flex-direction:column}.sidebar{width:100%;min-width:0;height:auto;flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1px solid #2A2F3E}.brand{display:none}.nav{display:flex;flex-direction:row;padding:0}.ni{flex-direction:column;gap:2px;padding:8px 10px;font-size:10px;border-left:none;border-bottom:3px solid transparent;white-space:nowrap}.ni.on{border-left:none;border-bottom-color:#FF6B35}.grid4{grid-template-columns:repeat(2,1fr)}}
+.tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.topt{padding:10px;border:1px solid #2A2F3E;border-radius:6px;cursor:pointer;font-size:12px;background:#1A1E28;color:#E8EAF0;display:flex;align-items:center;gap:6px}
+.topt.on{border-color:#FF6B35;color:#FF6B35}
+.toast{position:fixed;bottom:20px;right:20px;background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:12px 16px;color:#E8EAF0;font-size:13px;z-index:999;display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="root"></div>
 <script>
-const TYPES=[
-{id:"crack",label:"Fisură",icon:"⚠️",color:"#FF6B35"},
-{id:"flood",label:"Inundație",icon:"💧",color:"#4FC3F7"},
-{id:"light",label:"Iluminat",icon:"💡",color:"#FFD54F"},
-{id:"tree",label:"Copac",icon:"🌳",color:"#66BB6A"},
-{id:"sign",label:"Indicator",icon:"🚧",color:"#EF5350"},
-{id:"sidewalk",label:"Trotuar",icon:"🧱",color:"#AB47BC"},
-{id:"graffiti",label:"Graffiti",icon:"🖌️",color:"#EC407A"},
-{id:"waste",label:"Deșeuri",icon:"🗑️",color:"#8D6E63"},
-];
-const ADMIN_PW="Arad2026Admin!";
-const LAT=46.1865,LNG=21.3123;
+const T=[{id:"crack",l:"Fisură",e:"⚠️",c:"#FF6B35"},{id:"flood",l:"Inundație",e:"💧",c:"#4FC3F7"},{id:"light",l:"Iluminat",e:"💡",c:"#FFD54F"},{id:"tree",l:"Copac",e:"🌳",c:"#66BB6A"},{id:"sign",l:"Indicator",e:"🚧",c:"#EF5350"},{id:"sidewalk",l:"Trotuar",e:"🧱",c:"#AB47BC"},{id:"graffiti",l:"Graffiti",e:"🖌️",c:"#EC407A"},{id:"waste",l:"Deșeuri",e:"🗑️",c:"#8D6E63"}];
 let issues=[
-{id:1,type:"crack",title:"Groapă adâncă pe Bd. Revoluției",desc:"Groapă periculoasă, adâncime 15cm.",lat:46.1872,lng:21.3145,votes:47,status:"active",date:"2026-03-10",comments:8},
-{id:2,type:"light",title:"Stâlp iluminat nefuncțional",desc:"3 stâlpi fără lumină pe Calea Aurel Vlaicu.",lat:46.1855,lng:21.3098,votes:31,status:"active",date:"2026-03-15",comments:3},
-{id:3,type:"flood",title:"Apă stagnantă după ploaie",desc:"Canal înfundat, inundație după ploaie.",lat:46.1890,lng:21.3165,votes:28,status:"active",date:"2026-03-18",comments:5},
-{id:4,type:"sidewalk",title:"Trotuar complet distrus",desc:"Dale ridicate, periculos.",lat:46.1848,lng:21.3112,votes:22,status:"active",date:"2026-03-20",comments:2},
-{id:5,type:"waste",title:"Gunoi ilegal depozitat",desc:"Deșeuri construcție abandonate.",lat:46.1878,lng:21.3089,votes:19,status:"active",date:"2026-03-22",comments:4},
-{id:6,type:"crack",title:"Fisuri structurale pe pod",desc:"Fisuri pe podul peste Mureș.",lat:46.1830,lng:21.3200,votes:63,status:"resolved",date:"2026-02-15",resolvedDate:"2026-03-01",comments:12},
-{id:7,type:"sign",title:"Indicator STOP lipsă",desc:"Indicator dispărut, intersecție periculoasă.",lat:46.1862,lng:21.3134,votes:41,status:"resolved",date:"2026-02-20",resolvedDate:"2026-03-10",comments:6},
+{id:1,type:"crack",title:"Groapă pe Bd. Revoluției",desc:"Groapă periculoasă, 15cm adâncime.",lat:46.1872,lng:21.3145,votes:47,status:"active",date:"2026-03-10"},
+{id:2,type:"light",title:"Stâlp nefuncțional",desc:"3 stâlpi fără lumină pe Calea Aurel Vlaicu.",lat:46.1855,lng:21.3098,votes:31,status:"active",date:"2026-03-15"},
+{id:3,type:"flood",title:"Apă stagnantă",desc:"Canal înfundat, inundație după ploaie.",lat:46.1890,lng:21.3165,votes:28,status:"active",date:"2026-03-18"},
+{id:4,type:"sidewalk",title:"Trotuar distrus",desc:"Dale ridicate, periculos.",lat:46.1848,lng:21.3112,votes:22,status:"active",date:"2026-03-20"},
+{id:5,type:"waste",title:"Gunoi ilegal",desc:"Deșeuri construcție abandonate.",lat:46.1878,lng:21.3089,votes:19,status:"active",date:"2026-03-22"},
+{id:6,type:"crack",title:"Fisuri pe pod",desc:"Fisuri pe podul peste Mureș.",lat:46.1830,lng:21.3200,votes:63,status:"resolved",date:"2026-02-15"},
+{id:7,type:"sign",title:"Indicator STOP lipsă",desc:"Intersecție periculoasă.",lat:46.1862,lng:21.3134,votes:41,status:"resolved",date:"2026-02-20"},
 ];
-let page="map",filter="all",selId=null,showForm=false,pendingPin=null,nearbyId=null,votedIds=[],adminAuthed=false,toast=null,toastTimer=null,rateTimer=null;
-const RATE_MS=60000;
-const getRateSecs=()=>{try{const l=localStorage.getItem("uf_last");if(!l)return 0;const d=Date.now()-+l;return d>=RATE_MS?0:Math.ceil((RATE_MS-d)/1000);}catch{return 0;}};
-const stampRate=()=>{try{localStorage.setItem("uf_last",String(Date.now()));}catch{}};
+let pg="map",sel=null,voted=[],form=false,pin=null,toast=null,admOk=false;
+const LAT=46.1865,LNG=21.3123;
 function hav(a,b,c,d){const R=6371000,r=Math.PI/180,e=(c-a)*r,f=(d-b)*r,g=Math.sin(e/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(f/2)**2;return R*2*Math.atan2(Math.sqrt(g),Math.sqrt(1-g));}
-function toXY(lat,lng){return{x:Math.max(2,Math.min(98,50+(lng-LNG)*560)),y:Math.max(2,Math.min(98,50-(lat-LAT)*800))};}
-function showToast(msg,icon="✅"){if(toastTimer)clearTimeout(toastTimer);toast={msg,icon};render();toastTimer=setTimeout(()=>{toast=null;render();},3000);}
-function exportCSV(){const h=["ID","Data","Categorie","Titlu","Descriere","Lat","Lng","Status","Voturi"],r=issues.map(i=>[i.id,i.date,TYPES.find(t=>t.id===i.type)?.label||i.type,i.title,i.desc||"",i.lat,i.lng,i.status==="resolved"?"Rezolvat":"Activ",i.votes]),csv="\uFEFF"+[h,...r].map(row=>row.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n"),b=new Blob([csv],{type:"text/csv;charset=utf-8;"}),u=URL.createObjectURL(b),a=Object.assign(document.createElement("a"),{href:u,download:`UrbanFix_${new Date().toISOString().split("T")[0]}.csv`});a.click();URL.revokeObjectURL(u);}
-
+function xy(lat,lng){return{x:Math.max(2,Math.min(98,50+(lng-LNG)*560)),y:Math.max(2,Math.min(98,50-(lat-LAT)*800))};}
+function showToast(m,i="✅"){toast={m,i};render();setTimeout(()=>{toast=null;render();},3000);}
 function render(){
-const rateSecs=getRateSecs();const rl=rateSecs>0;
-const active=issues.filter(i=>i.status==='active');
-const resolved=issues.filter(i=>i.status==='resolved');
-const pages={map:"🗺️ Hartă — Arad",issues:"📋 Probleme Raportate",resolved:"✅ Probleme Rezolvate",reports:"📊 Rapoarte",admin:adminAuthed?"🛡️ Admin Dashboard":"🛡️ Admin Portal"};
-
-let html=`<div class="app">
+const active=issues.filter(i=>i.status==="active");
+const resolved=issues.filter(i=>i.status==="resolved");
+const pages={map:"🗺️ Hartă — Arad",issues:"📋 Probleme",resolved:"✅ Rezolvate",admin:admOk?"🛡️ Admin":"🛡️ Login Admin"};
+let h=`<div class="app">
 <div class="sidebar">
-<div class="brand">Urban<span>Fix</span> <span style="font-size:10px;color:#555D75;font-family:monospace;font-weight:400">ARAD</span></div>
-<div class="nav">
-${[{id:"map",icon:"🗺️",label:"Hartă",badge:active.length},{id:"issues",icon:"📋",label:"Probleme"},{id:"resolved",icon:"✅",label:"Rezolvate",badge:resolved.length},{id:"reports",icon:"📊",label:"Rapoarte"},{id:"_sep"},{id:"admin",icon:"🛡️",label:"Admin",badge:active.length,adm:true}].map(n=>{
-if(n.id==='_sep')return`<div style="height:1px;background:#2A2F3E;margin:8px 12px"></div>`;
-return`<div class="ni${page===n.id?' on':''}${n.adm?' adm':''}" onclick="nav('${n.id}')">
-<span style="font-size:16px;width:20px;text-align:center">${n.icon}</span><span>${n.label}</span>
-${n.badge>0?`<span class="badge${n.adm?' pu':''}">${n.badge}</span>`:''}
-</div>`;}).join('')}
-</div>
-<div style="padding:14px;border-top:1px solid #2A2F3E">
-<div style="display:flex;align-items:center;gap:8px;background:#1A1E28;border:1px solid #2A2F3E;border-radius:6px;padding:8px 12px">
-<div style="width:7px;height:7px;border-radius:50%;background:${page==='admin'&&adminAuthed?'#7C4DFF':rl?'#FF1744':'#00E676'};flex-shrink:0"></div>
-<div style="font-size:11px;font-family:monospace;color:#555D75"><strong style="color:#00E5FF;display:block;font-size:12px">${rl?`Blocat ${rateSecs}s`:'Acces anonim'}</strong>${rl?'Așteptați':'1 raport / min / IP'}</div>
-</div></div>
+<div class="brand">Urban<b>Fix</b> Arad</div>
+${[{id:"map",icon:"🗺️",label:"Hartă",n:active.length},{id:"issues",icon:"📋",label:"Probleme"},{id:"resolved",icon:"✅",label:"Rezolvate",n:resolved.length},{id:"admin",icon:"🛡️",label:"Admin"}].map(n=>`
+<div class="ni${pg===n.id?" on":""}" onclick="pg='${n.id}';sel=null;render()">${n.icon} ${n.label}${n.n>0?` <span style="margin-left:auto;background:#FF6B35;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px">${n.n}</span>`:""}</div>`).join("")}
 </div>
 <div class="main">
-<div class="topbar">
-<div class="topbar-title">${pages[page]}</div>
-${rl&&page!=='admin'?`<div style="font-size:12px;font-family:monospace;color:#FF1744;background:rgba(255,23,68,.1);border:1px solid rgba(255,23,68,.3);border-radius:6px;padding:4px 10px">⏱️ ${rateSecs}s</div>`:''}
-${page!=='admin'?`<button class="btn btn-primary" ${rl?'disabled':''} onclick="clickReport()">＋ Raportează</button>`:''}
-${page==='admin'&&adminAuthed?`<button class="btn btn-ghost" style="font-size:11px" onclick="exportCSV()">📥 Excel</button>`:''}
+<div class="topbar"><h2>${pages[pg]}</h2>
+${pg!=="admin"?`<button class="btn btn-p" onclick="pg='map';render();showToast('Click pe hartă!','📍')">＋ Raportează</button>`:""}
 </div>`;
 
-if(page==='admin'){
-if(!adminAuthed){
-html+=`<div class="adm-gate"><div class="adm-card">
-<div style="text-align:center;margin-bottom:24px"><div style="font-size:40px;margin-bottom:8px">🛡️</div><div style="font-size:22px;font-weight:800;color:#7C4DFF">Admin Portal</div><div style="font-size:11px;color:#555D75;font-family:monospace;margin-top:4px">UrbanFix Arad · Acces restricționat</div></div>
-<div class="fg"><label class="fl">Parolă admin</label><input class="fi" id="adm-pw" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" style="border-color:#7C4DFF"/></div>
-<button class="btn btn-pu" style="width:100%;padding:11px;font-size:14px" onclick="doLogin()">🔓 Intră în Admin</button>
-<div style="font-size:10px;color:#555D75;font-family:monospace;text-align:center;margin-top:14px">Parola: <code>Arad2026Admin!</code></div>
+if(pg==="map"){
+h+=`<div class="page">
+<div class="grid">
+<div class="card"><div class="val" style="color:#FF6B35">${active.length}</div><div class="lbl">Active</div></div>
+<div class="card"><div class="val" style="color:#00E676">${resolved.length}</div><div class="lbl">Rezolvate</div></div>
+<div class="card"><div class="val" style="color:#00E5FF">${issues.reduce((a,i)=>a+i.votes,0)}</div><div class="lbl">Voturi</div></div>
+<div class="card"><div class="val" style="color:#7C4DFF;font-size:18px">LIVE</div><div class="lbl">Status</div></div>
+</div>
+<div class="map" id="mapel" onclick="mapClick(event)">
+${issues.map(i=>{const p=xy(i.lat,i.lng),t=T.find(x=>x.id===i.type)||T[0];return`<div class="pin" style="left:${p.x}%;top:${p.y}%" onclick="event.stopPropagation();sel=${i.id};render()" title="${i.title}">${t.e}</div>`;}).join("")}
+${pin?`<div style="position:absolute;left:${pin.px}%;top:${pin.py}%;transform:translate(-50%,-50%);width:12px;height:12px;background:#FF6B35;border-radius:50%;border:2px solid #fff;z-index:5"></div>`:""}
+<div style="position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.7);padding:5px 10px;border-radius:6px;font-size:11px;color:#8B92A8">Click pe hartă pentru a raporta o problemă</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong>Cele mai votate</strong><button class="btn btn-g" onclick="pg='issues';render()">Vezi toate →</button></div>
+${[...active].sort((a,b)=>b.votes-a.votes).slice(0,3).map(i=>icard(i)).join("")}
+</div>`;
+}
+
+else if(pg==="issues"||pg==="resolved"){
+const list=(pg==="resolved"?resolved:active).sort((a,b)=>b.votes-a.votes);
+h+=`<div class="page">${list.length===0?`<div style="text-align:center;padding:40px;color:#555D75">🎉 Nu există probleme</div>`:list.map(i=>icard(i)).join("")}</div>`;
+}
+
+else if(pg==="admin"){
+if(!admOk){
+h+=`<div class="page"><div style="max-width:380px;margin:40px auto;background:#12151C;border:1px solid #7C4DFF;border-radius:16px;padding:36px">
+<div style="text-align:center;margin-bottom:24px"><div style="font-size:40px">🛡️</div><div style="font-size:20px;font-weight:800;color:#7C4DFF;margin-top:8px">Admin Portal</div></div>
+<div class="fg"><label class="fl">Parolă</label><input class="fi" id="apw" type="password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+<button class="btn btn-p" style="width:100%;padding:11px;background:#7C4DFF" onclick="doLogin()">🔓 Intră</button>
+<div style="text-align:center;margin-top:12px;font-size:11px;color:#555D75">Parola: Arad2026Admin!</div>
 </div></div>`;
 }else{
-const fi=issues.filter(i=>filter==='all'||i.status===filter).sort((a,b)=>b.votes-a.votes);
-html+=`<div class="page">
-<div style="background:linear-gradient(135deg,rgba(124,77,255,.18),rgba(0,229,255,.08));border:1px solid rgba(124,77,255,.3);border-radius:10px;padding:20px;margin-bottom:20px;display:flex;align-items:center;gap:16px">
-<div style="flex:1"><div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><div style="font-size:22px;font-weight:800;color:#E8EAF0">🛡️ Admin Dashboard</div><span style="background:#7C4DFF;color:#fff;font-size:10px;font-family:monospace;padding:3px 10px;border-radius:20px;font-weight:700">ADMIN</span></div>
-<div style="font-size:12px;color:#555D75;font-family:monospace">${new Date().toLocaleDateString('ro-RO')} · UrbanFix Arad</div></div>
-<div style="display:flex;gap:8px"><button class="btn btn-ghost" style="font-size:11px" onclick="adminAuthed=false;render()">🚪 Ieși</button></div>
+h+=`<div class="page">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+<div style="font-size:20px;font-weight:800">🛡️ Admin Dashboard</div>
+<button class="btn btn-g" onclick="admOk=false;render()">🚪 Ieși</button>
 </div>
-<div class="grid4">
-${[[active.length,'#FF1744','Active'],[resolved.length,'#00E676','Rezolvate'],[issues.reduce((a,i)=>a+i.votes,0),'#00E5FF','Voturi'],[Math.round(resolved.length/Math.max(issues.length,1)*100)+'%','#7C4DFF','Rezolvare']].map(([v,c,l])=>`<div class="stat"><div class="stat-val" style="color:${c}">${v}</div><div class="stat-lbl">${l}</div></div>`).join('')}
-</div>
-<div style="display:flex;gap:6px;margin-bottom:16px">
-${[["all","Toate"],["active","🔴 Active"],["resolved","✅ Rezolvate"]].map(([v,l])=>`<button class="btn ${filter===v?'btn-primary':'btn-ghost'}" style="font-size:11px;padding:5px 10px" onclick="filter='${v}';render()">${l}</button>`).join('')}
+<div class="grid">
+<div class="card"><div class="val" style="color:#FF1744">${active.length}</div><div class="lbl">Active</div></div>
+<div class="card"><div class="val" style="color:#00E676">${resolved.length}</div><div class="lbl">Rezolvate</div></div>
+<div class="card"><div class="val" style="color:#00E5FF">${issues.reduce((a,i)=>a+i.votes,0)}</div><div class="lbl">Voturi</div></div>
+<div class="card"><div class="val" style="color:#7C4DFF">${Math.round(resolved.length/Math.max(issues.length,1)*100)}%</div><div class="lbl">Rezolvare</div></div>
 </div>
 <div style="background:#12151C;border:1px solid #2A2F3E;border-radius:10px;overflow:hidden;overflow-x:auto">
-<table class="tbl"><thead><tr>${['Categorie','Titlu','Data','Status','Voturi','Acțiuni'].map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-<tbody>${fi.map(issue=>{const t=TYPES.find(x=>x.id===issue.type)||TYPES[0];return`<tr>
-<td><span class="itag" style="background:${t.color}22;color:${t.color}">${t.icon} ${t.label}</span></td>
-<td><div style="font-weight:700">${issue.title}</div><div style="font-size:11px;color:#8B92A8">${(issue.desc||'').slice(0,50)}</div></td>
-<td style="font-family:monospace;font-size:11px">${issue.date}</td>
-<td><span class="sbadge ${issue.status==='resolved'?'res':'act'}">${issue.status==='resolved'?'✅':'🔴'}</span></td>
-<td style="font-family:monospace;font-weight:700;color:#FF6B35">${issue.votes}▲</td>
-<td><div style="display:flex;gap:6px">
-${issue.status==='active'?`<button class="btn btn-green" style="padding:5px 10px;font-size:11px" onclick="resolveIssue(${issue.id})">✅</button>`:''}
-<button class="btn btn-red" style="padding:5px 10px;font-size:11px" onclick="deleteIssue(${issue.id})">🗑️</button>
+<table style="width:100%;border-collapse:collapse">
+<thead><tr>${["Tip","Titlu","Data","Status","Voturi","Acțiuni"].map(h=>`<th style="background:#1A1E28;padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;color:#555D75;text-align:left;border-bottom:1px solid #2A2F3E">${h}</th>`).join("")}</tr></thead>
+<tbody>${issues.map(i=>{const t=T.find(x=>x.id===i.type)||T[0];return`<tr>
+<td style="padding:12px 14px;border-bottom:1px solid #2A2F3E"><span class="tag" style="background:${t.c}22;color:${t.c}">${t.e} ${t.l}</span></td>
+<td style="padding:12px 14px;border-bottom:1px solid #2A2F3E;font-weight:700;color:#E8EAF0">${i.title}</td>
+<td style="padding:12px 14px;border-bottom:1px solid #2A2F3E;font-size:11px;color:#8B92A8">${i.date}</td>
+<td style="padding:12px 14px;border-bottom:1px solid #2A2F3E"><span class="tag" style="background:${i.status==="resolved"?"rgba(0,230,118,.15)":"rgba(255,107,53,.15)"};color:${i.status==="resolved"?"#00E676":"#FF6B35"}">${i.status==="resolved"?"✅ Rezolvat":"🔴 Activ"}</span></td>
+<td style="padding:12px 14px;border-bottom:1px solid #2A2F3E;font-weight:700;color:#FF6B35">${i.votes}▲</td>
+<td style="padding:12px 14px;border-bottom:1px solid #2A2F3E"><div style="display:flex;gap:6px">
+${i.status==="active"?`<button class="btn btn-gr" style="padding:5px 10px;font-size:11px" onclick="resolve(${i.id})">✅</button>`:""}
+<button class="btn btn-rd" style="padding:5px 10px;font-size:11px" onclick="del(${i.id})">🗑️</button>
 </div></td>
-</tr>`;}).join('')}</tbody></table></div></div>`;
+</tr>`;}).join("")}</tbody>
+</table></div></div>`;
 }
 }
 
-else if(page==='map'){
-html+=`<div class="page">
-${rl?`<div class="rate-banner"><span style="font-size:22px">⏱️</span><div style="flex:1"><strong style="display:block;font-size:13px;color:#FF1744;margin-bottom:2px">Limită atinsă</strong><span style="font-size:12px;color:#8B92A8;font-family:monospace">Te rugăm să aștepți un minut.</span></div><div style="font-size:24px;font-weight:800;font-family:monospace;color:#FF1744">${rateSecs}s</div></div>`:''}
-<div class="grid4">
-${[[active.length,'#FF6B35','Active'],[resolved.length,'#00E676','Rezolvate'],[issues.reduce((a,i)=>a+i.votes,0),'#00E5FF','Voturi'],[rl?rateSecs+'s':'✓',rl?'#FF1744':'#00E676','Rate limit']].map(([v,c,l])=>`<div class="stat"><div class="stat-val" style="color:${c}">${v}</div><div class="stat-lbl">${l}</div></div>`).join('')}
-</div>
-<div class="map-wrap"><div class="map-canvas" id="mapcanvas" onclick="mapClick(event)">
-<svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.2" viewBox="0 0 960 360" preserveAspectRatio="none">
-${[[0,85,960,6],[0,145,960,10],[0,205,960,6],[0,260,960,8]].map(([x,y,w,h])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#3a4560"/>`).join('')}
-${[[120,0,6,360],[240,0,10,360],[380,0,6,360],[480,0,12,360],[600,0,6,360],[720,0,8,360]].map(([x,y,w,h])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#4a5570"/>`).join('')}
-<ellipse cx="480" cy="338" rx="500" ry="25" fill="#1a2840" opacity=".9"/>
-${[[130,95,100,40],[250,95,120,40],[390,95,80,40],[490,95,100,40],[610,95,100,40],[130,155,100,40],[250,155,120,40],[390,155,80,40],[130,215,100,40],[250,215,120,40]].map(([x,y,w,h])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="#1e2438"/>`).join('')}
-</svg>
-<div style="position:absolute;top:32%;left:4%;font-size:10px;font-family:monospace;color:#4a5578;pointer-events:none">Bd. Revoluției</div>
-<div style="position:absolute;top:52%;left:22%;font-size:10px;font-family:monospace;color:#4a5578;pointer-events:none">Calea Aurel Vlaicu</div>
-<div style="position:absolute;top:76%;left:36%;font-size:10px;font-family:monospace;color:#4a5578;pointer-events:none">Râul Mureș</div>
-${issues.map(issue=>{const pos=toXY(issue.lat,issue.lng);const t=TYPES.find(x=>x.id===issue.type)||TYPES[0];return`<div class="map-pin" style="left:${pos.x}%;top:${pos.y}%" onclick="event.stopPropagation();selId=${issue.id};render()">
-<div class="pin-body" style="background:${selId===issue.id?t.color:t.color+'99'}"><span class="pin-icon">${t.icon}</span></div>
-<div class="pin-votes">${issue.votes}</div></div>`;}).join('')}
-${pendingPin?`<div style="position:absolute;left:${pendingPin.px}%;top:${pendingPin.py}%;transform:translate(-50%,-50%);z-index:5;width:12px;height:12px;background:#FF6B35;border-radius:50%;border:2px solid #fff"></div>`:''}
-${rl?`<div style="position:absolute;inset:0;background:rgba(10,12,16,.72);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;gap:6px;cursor:not-allowed"><div style="font-size:34px">⏱️</div><div style="font-size:28px;font-weight:800;font-family:monospace;color:#FF1744">${rateSecs}s</div></div>`:''}
-<div style="position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:4px">
-${['＋','－','◎'].map(c=>`<div style="width:32px;height:32px;background:#12151C;border:1px solid #2A2F3E;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#8B92A8">${c}</div>`).join('')}
-</div>
-<div style="position:absolute;bottom:12px;left:12px;background:rgba(10,12,16,.85);border:1px solid #2A2F3E;border-radius:6px;padding:6px 10px;font-size:11px;font-family:monospace;color:#8B92A8">ARAD · <span style="color:#00E5FF">46.1865°N 21.3123°E</span>${!rl?' · Click pt. a raporta':''}</div>
+h+=`</div></div>`;
+
+if(form&&pin){
+const near=issues.find(i=>i.status==="active"&&hav(pin.lat,pin.lng,i.lat,i.lng)<=20);
+h+=`<div class="overlay" onclick="form=false;pin=null;render()"><div class="dialog" onclick="event.stopPropagation()">
+<h3>🚨 Raportează problemă</h3>
+${near?`<div style="background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.3);border-radius:8px;padding:12px;margin-bottom:16px"><div style="color:#00E5FF;font-weight:700;margin-bottom:8px">⚠️ Există deja un raport în această zonă!</div>
+<button class="btn btn-gr" onclick="doVote(${near.id});form=false;pin=null;render()">▲ Votează raportul existent</button></div>`:""}
+<div style="background:#1A1E28;border-radius:6px;padding:8px 12px;font-size:11px;color:#00E5FF;margin-bottom:16px">📍 ${pin.lat.toFixed(5)}°N, ${pin.lng.toFixed(5)}°E</div>
+<div class="fg"><label class="fl">Tip problemă</label><div class="tgrid">
+${T.map(t=>`<div class="topt${window._ft===t.id?" on":""}" onclick="window._ft='${t.id}';render()" style="${window._ft===t.id?`border-color:${t.c};color:${t.c}`:""}"><span style="font-size:18px">${t.e}</span>${t.l}</div>`).join("")}
 </div></div>
-<div class="section-hdr"><div class="section-title">Cele mai votate</div><button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="nav('issues')">Vezi toate →</button></div>
-${[...active].sort((a,b)=>b.votes-a.votes).slice(0,3).map(issue=>issueCard(issue,votedIds)).join('')}
-</div>`;
-}
-
-else if(page==='issues'||page==='resolved'){
-const list=(page==='resolved'?resolved:active).filter(i=>filter==='all'||i.type===filter).sort((a,b)=>b.votes-a.votes);
-html+=`<div class="page">
-<div class="chips">
-<div class="chip${filter==='all'?' on':''}" onclick="filter='all';render()">Toate</div>
-${TYPES.map(t=>`<div class="chip${filter===t.id?' on':''}" onclick="filter='${t.id}';render()">${t.icon} ${t.label}</div>`).join('')}
+<div class="fg"><label class="fl">Titlu *</label><input class="fi" id="ft" placeholder="Descrie pe scurt problema..." maxlength="100"/></div>
+<div class="fg"><label class="fl">Descriere</label><textarea class="fi" id="fd" rows="3" placeholder="Detalii suplimentare..."></textarea></div>
+<div style="display:flex;gap:10px;margin-top:4px">
+<button class="btn btn-g" style="flex:1" onclick="form=false;pin=null;render()">Anulează</button>
+<button class="btn btn-p" style="flex:1" onclick="submitForm()">📤 Trimite</button>
 </div>
-<div class="section-hdr"><div class="section-title">${page==='resolved'?`✅ ${resolved.length} rezolvate`:`🔴 ${list.length} active`}</div></div>
-${list.length===0?'<div style="text-align:center;padding:40px;color:#555D75"><div style="font-size:40px;margin-bottom:8px">🎉</div><div>Nu există probleme</div></div>':list.map(issue=>issueCard(issue,votedIds)).join('')}
-</div>`;
-}
-
-else if(page==='reports'){
-const byType=TYPES.map(t=>({...t,count:issues.filter(i=>i.type===t.id).length})).filter(t=>t.count>0).sort((a,b)=>b.count-a.count);
-const maxC=Math.max(...byType.map(t=>t.count),1);
-html+=`<div class="page">
-<div style="background:linear-gradient(135deg,rgba(124,77,255,.15),rgba(0,229,255,.08));border:1px solid #2A2F3E;border-radius:10px;padding:20px;margin-bottom:20px">
-<div style="font-size:22px;font-weight:800;margin-bottom:4px;color:#E8EAF0">📊 Raport Lunar — Martie 2026</div>
-<div style="font-size:12px;color:#555D75;font-family:monospace">Generat automat · Arad, România</div></div>
-<div class="grid4">
-${[[active.length,'#FF6B35','Active'],[resolved.length,'#00E676','Rezolvate'],[issues.reduce((a,i)=>a+i.votes,0),'#00E5FF','Voturi'],['1/min','#FFD600','Rate limit']].map(([v,c,l])=>`<div class="stat"><div class="stat-val" style="color:${c};font-size:${typeof v==='string'?16:28}px">${v}</div><div class="stat-lbl">${l}</div></div>`).join('')}
-</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-<div style="background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:16px">
-<div style="font-size:11px;color:#555D75;font-family:monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">Distribuție pe tip</div>
-${byType.map(t=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-<div style="font-size:11px;font-family:monospace;color:#8B92A8;width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.icon} ${t.label}</div>
-<div style="flex:1;height:8px;background:#222736;border-radius:4px;overflow:hidden"><div style="height:100%;border-radius:4px;background:${t.color};width:${(t.count/maxC)*100}%"></div></div>
-<div style="font-size:11px;font-family:monospace;color:#8B92A8;width:20px;text-align:right">${t.count}</div></div>`).join('')}
-</div>
-<div style="background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:16px">
-<div style="font-size:11px;color:#555D75;font-family:monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">Recomandări AI</div>
-${[["⚠️","Bd. Revoluției — inspecție urgentă."],["🔓","Sistem anonim funcționează corect."],["✅","Rata rezolvare bună."]].map((r,i)=>`<div style="display:flex;gap:10px;padding:10px 0;border-bottom:${i<2?'1px solid #2A2F3E':'none'}"><span style="font-size:20px">${r[0]}</span><div style="font-size:12px;color:#8B92A8;line-height:1.5">${r[1]}</div></div>`).join('')}
-</div></div></div>`;
-}
-
-html+=`</div></div>`;
-
-if(showForm&&pendingPin){
-const near=issues.find(i=>i.id===nearbyId);
-html+=`<div class="overlay" onclick="closeForm()"><div class="dialog" onclick="event.stopPropagation()">
-<div class="dialog-hdr"><div class="dialog-title">🚨 Raportează problemă</div><div class="dialog-close" onclick="closeForm()">✕</div></div>
-<div class="dialog-body">
-${near?`<div style="background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.35);border-radius:10px;padding:14px 16px;margin-bottom:16px">
-<div style="font-size:13px;font-weight:700;color:#00E5FF;margin-bottom:6px">⚠️ Există deja un raport în această zonă (20m)</div>
-<div style="display:flex;align-items:center;gap:10px;background:#1A1E28;border-radius:6px;padding:10px 12px">
-<span class="itag" style="background:${(TYPES.find(t=>t.id===near.type)||TYPES[0]).color}22;color:${(TYPES.find(t=>t.id===near.type)||TYPES[0]).color}">${(TYPES.find(t=>t.id===near.type)||TYPES[0]).icon} ${(TYPES.find(t=>t.id===near.type)||TYPES[0]).label}</span>
-<div style="flex:1;font-size:13px;font-weight:700;color:#E8EAF0">${near.title}</div>
-<button class="btn btn-green" style="font-size:11px;padding:5px 10px" onclick="voteIssue(${near.id});closeForm()">▲ Votează</button>
-</div></div>`:''}
-${rl?`<div class="rate-banner" style="margin-bottom:16px"><span style="font-size:22px">⏱️</span><div style="flex:1"><strong style="display:block;font-size:13px;color:#FF1744">Așteptați</strong><span style="font-size:12px;color:#8B92A8;font-family:monospace">1 raport / min / IP</span></div><div style="font-size:24px;font-weight:800;font-family:monospace;color:#FF1744">${rateSecs}s</div></div>`:''}
-<div class="coord-box"><div style="width:6px;height:6px;border-radius:50%;background:#00E5FF"></div>Pin: ${pendingPin.lat.toFixed(5)}°N, ${pendingPin.lng.toFixed(5)}°E</div>
-<div class="fg"><label class="fl">Tip problemă</label><div class="type-grid">
-${TYPES.map(t=>`<div class="type-opt${t.id===window._formType?' on':''}" style="${t.id===window._formType?`color:${t.color};border-color:${t.color}`:''}" onclick="window._formType='${t.id}';render()"><span style="font-size:18px">${t.icon}</span><span style="font-size:11px">${t.label}</span></div>`).join('')}
-</div></div>
-<div class="fg"><label class="fl">Titlu *</label><input class="fi" id="f-title" placeholder="ex: Groapă adâncă pe Bd. Revoluției" maxlength="100" value="${(window._formTitle||'').replace(/"/g,'&quot;')}"/></div>
-<div class="fg"><label class="fl">Descriere</label><textarea class="fi ftxt" id="f-desc" placeholder="Descrie problema...">${window._formDesc||''}</textarea></div>
-<div class="note">🔒 Nu este necesar un cont. IP-ul este stocat intern doar pentru moderare.</div>
-<button class="btn btn-primary" style="width:100%;padding:12px;font-size:14px" ${rl?'disabled':''} onclick="submitForm()">${rl?`⏱️ Așteptați ${rateSecs}s...`:'📤 Trimite raportul'}</button>
-</div></div></div>`;
-}
-
-const sel=issues.find(i=>i.id===selId);
-if(sel){
-const t=TYPES.find(x=>x.id===sel.type)||TYPES[0];
-const voted=votedIds.includes(sel.id);
-html+=`<div class="overlay" onclick="selId=null;render()"><div class="dialog" onclick="event.stopPropagation()">
-<div class="dialog-hdr"><div class="dialog-title" style="font-size:15px">${sel.title}</div><div class="dialog-close" onclick="selId=null;render()">✕</div></div>
-<div class="dialog-body">
-<div style="width:100%;height:160px;background:#1A1E28;border-radius:6px;border:1px solid #2A2F3E;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:16px">${t.icon}</div>
-<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
-<span class="itag" style="background:${t.color}22;color:${t.color}">${t.icon} ${t.label}</span>
-<span class="sbadge ${sel.status==='resolved'?'res':'act'}">${sel.status==='resolved'?'✅ Rezolvat':'🔴 Activ'}</span>
-<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-family:monospace;background:#1A1E28;color:#8B92A8;border:1px solid #2A2F3E">📅 ${sel.date}</span>
-</div>
-<p style="font-size:13px;color:#8B92A8;line-height:1.6;margin-bottom:16px">${sel.desc}</p>
-<div style="display:flex;gap:8px;margin-bottom:16px">
-<button class="btn ${voted?'btn-primary':'btn-ghost'}" style="flex:1" onclick="voteIssue(${sel.id})">${voted?'▲ Votat':'▲ Votează'} · ${sel.votes}</button>
-${sel.status==='active'?`<button class="btn btn-green" style="flex:1" onclick="resolveIssue(${sel.id})">✅ Marchează rezolvat</button>`:''}
-</div>
-<div style="height:1px;background:#2A2F3E;margin:16px 0"></div>
-<div style="font-size:11px;color:#555D75;font-family:monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">Comentarii (${sel.comments||0})</div>
-<div style="display:flex;gap:8px;margin-top:10px"><input class="fi" placeholder="Adaugă un comentariu anonim..." style="flex:1"/><button class="btn btn-primary">→</button></div>
-</div></div></div>`;
-}
-
-if(toast){
-html+=`<div class="toast"><span style="font-size:16px;flex-shrink:0">${toast.icon}</span>${toast.msg}</div>`;
-}
-
-document.getElementById('app').innerHTML=html;
-
-if(rateTimer)clearInterval(rateTimer);
-if(getRateSecs()>0){rateTimer=setInterval(()=>{if(getRateSecs()<=0){clearInterval(rateTimer);rateTimer=null;}render();},1000);}
-}
-
-function issueCard(issue,votedIds){
-const t=TYPES.find(x=>x.id===issue.type)||TYPES[0];
-const voted=votedIds.includes(issue.id);
-return`<div class="icard${selId===issue.id?' sel':''}" onclick="selId=${issue.id};render()">
-<div class="vote-col">
-<div class="vote-btn${voted?' voted':''}" onclick="event.stopPropagation();voteIssue(${issue.id})">▲</div>
-<div class="vote-count">${issue.votes}</div>
-<div class="vote-lbl">voturi</div>
-</div>
-<div class="ibody">
-<span class="itag" style="background:${t.color}22;color:${t.color}">${t.icon} ${t.label}</span>
-${issue.status==='resolved'?`<span class="sbadge res" style="margin-left:6px">✅ Rezolvat</span>`:''}
-<div class="ititle">${issue.title}</div>
-<div class="idesc">${issue.desc}</div>
-<div class="imeta"><span>📅 ${issue.date}</span><span style="color:#2A2F3E">·</span><span>💬 ${issue.comments||0}</span>${issue.resolvedDate?`<span style="color:#2A2F3E">·</span><span style="color:#00E676">✅ ${issue.resolvedDate}</span>`:''}</div>
 </div></div>`;
 }
 
-function nav(p){page=p;filter='all';selId=null;render();}
-function clickReport(){if(getRateSecs()>0){showToast("Te rugăm să aștepți un minut.","⏱️");return;}page='map';render();showToast("Click pe hartă pentru a plasa un pin!","📍");}
-function mapClick(e){
-if(getRateSecs()>0)return;
-const c=document.getElementById('mapcanvas');if(!c)return;
-const r=c.getBoundingClientRect();
-const px=((e.clientX-r.left)/r.width)*100;
-const py=((e.clientY-r.top)/r.height)*100;
-const lat=LAT+(50-py)/800;const lng=LNG+(px-50)/560;
-const near=issues.find(i=>i.status==='active'&&hav(lat,lng,i.lat,i.lng)<=20);
-nearbyId=near?near.id:null;
-pendingPin={lat,lng,px,py};
-window._formType='crack';window._formTitle='';window._formDesc='';
-showForm=true;render();
+if(sel!==null){
+const i=issues.find(x=>x.id===sel);
+if(i){const t=T.find(x=>x.id===i.type)||T[0];const v=voted.includes(i.id);
+h+=`<div class="overlay" onclick="sel=null;render()"><div class="dialog" onclick="event.stopPropagation()">
+<h3>${i.title}</h3>
+<div style="margin-bottom:12px"><span class="tag" style="background:${t.c}22;color:${t.c}">${t.e} ${t.l}</span><span class="tag" style="background:${i.status==="resolved"?"rgba(0,230,118,.15)":"rgba(255,107,53,.15)"};color:${i.status==="resolved"?"#00E676":"#FF6B35"}">${i.status==="resolved"?"✅ Rezolvat":"🔴 Activ"}</span></div>
+<p style="font-size:13px;color:#8B92A8;line-height:1.6;margin-bottom:16px">${i.desc}</p>
+<div style="font-size:11px;color:#555D75;margin-bottom:16px">📅 ${i.date} · 📍 ${i.lat.toFixed(4)}°N ${i.lng.toFixed(4)}°E</div>
+<div style="display:flex;gap:8px;margin-bottom:12px">
+<button class="btn ${v?"btn-p":"btn-g"}" style="flex:1" onclick="doVote(${i.id})">${v?"▲ Votat":"▲ Votează"} · ${i.votes}</button>
+${i.status==="active"?`<button class="btn btn-gr" style="flex:1" onclick="resolve(${i.id})">✅ Rezolvat</button>`:""}
+</div>
+<button class="btn btn-g" style="width:100%" onclick="sel=null;render()">Închide</button>
+</div></div>`;
 }
-function closeForm(){showForm=false;pendingPin=null;nearbyId=null;render();}
-function submitForm(){
-if(getRateSecs()>0)return;
-const title=document.getElementById('f-title')?.value?.trim();
-const desc=document.getElementById('f-desc')?.value?.trim();
-if(!title)return;
-issues=[{id:Date.now(),type:window._formType||'crack',title,desc,lat:pendingPin.lat,lng:pendingPin.lng,votes:0,status:'active',date:new Date().toISOString().split('T')[0],comments:0},...issues];
-closeForm();stampRate();showToast("Problemă raportată!","🚨");
 }
-function voteIssue(id){
-const a=votedIds.includes(id);
-votedIds=a?votedIds.filter(v=>v!==id):[...votedIds,id];
-issues=issues.map(i=>i.id===id?{...i,votes:i.votes+(a?-1:1)}:i);
-if(!a)showToast("Vot înregistrat!","▲");
-render();
+
+if(toast){h+=`<div class="toast"><span style="font-size:18px">${toast.i}</span>${toast.m}</div>`;}
+
+document.getElementById("root").innerHTML=h;
 }
-function resolveIssue(id){
-issues=issues.map(i=>i.id===id?{...i,status:'resolved',resolvedDate:new Date().toISOString().split('T')[0]}:i);
-selId=null;showToast("Rezolvat!","✅");render();
-}
-function deleteIssue(id){
-issues=issues.filter(i=>i.id!==id);
-showToast("Șters.","🗑️");render();
-}
-function doLogin(){
-const pw=document.getElementById('adm-pw')?.value;
-if(pw===ADMIN_PW){adminAuthed=true;render();}
-else{document.querySelector('.adm-err')||document.querySelector('.adm-card').insertAdjacentHTML('afterbegin','<div class="adm-err">❌ Parolă incorectă.</div>');};
-}
-window._formType='crack';window._formTitle='';window._formDesc='';
+
+function icard(i){const t=T.find(x=>x.id===i.type)||T[0];const v=voted.includes(i.id);return`<div class="icard" onclick="sel=${i.id};render()">
+<div class="votes"><div class="vbtn${v?" on":""}" onclick="event.stopPropagation();doVote(${i.id})">▲</div><div class="vnum">${i.votes}</div><div style="font-size:9px;color:#555D75">voturi</div></div>
+<div class="ibody"><span class="tag" style="background:${t.c}22;color:${t.c}">${t.e} ${t.l}</span><div class="ititle">${i.title}</div><div class="idesc">${i.desc}</div><div class="imeta">📅 ${i.date}</div></div></div>`;}
+function mapClick(e){const m=document.getElementById("mapel");if(!m)return;const r=m.getBoundingClientRect();const px=((e.clientX-r.left)/r.width)*100;const py=((e.clientY-r.top)/r.height)*100;pin={lat:LAT+(50-py)/800,lng:LNG+(px-50)/560,px,py};window._ft="crack";form=true;render();}
+function submitForm(){const title=document.getElementById("ft")?.value?.trim();const desc=document.getElementById("fd")?.value?.trim();if(!title)return;issues=[{id:Date.now(),type:window._ft||"crack",title,desc:desc||"",lat:pin.lat,lng:pin.lng,votes:0,status:"active",date:new Date().toISOString().split("T")[0]},...issues];form=false;pin=null;showToast("Problemă raportată! ","🚨");}
+function doVote(id){const a=voted.includes(id);voted=a?voted.filter(v=>v!==id):[...voted,id];issues=issues.map(i=>i.id===id?{...i,votes:i.votes+(a?-1:1)}:i);if(!a)showToast("Vot înregistrat!","▲");else render();}
+function resolve(id){issues=issues.map(i=>i.id===id?{...i,status:"resolved"}:i);sel=null;showToast("Rezolvat! ","✅");}
+function del(id){issues=issues.filter(i=>i.id!==id);showToast("Șters.","🗑️");}
+function doLogin(){const pw=document.getElementById("apw")?.value;if(pw==="Arad2026Admin!"){admOk=true;render();}else{alert("Parolă incorectă!");}}
+window._ft="crack";
 render();
 </script>
 </body>
