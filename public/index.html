@@ -6,297 +6,300 @@
 <title>UrbanFix Arad</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0A0C10;color:#E8EAF0;font-family:sans-serif;height:100vh;overflow:hidden;display:flex}
-#sidebar{width:200px;background:#12151C;border-right:1px solid #2A2F3E;display:flex;flex-direction:column;flex-shrink:0}
-#sidebar .brand{padding:16px 20px;font-size:18px;font-weight:800;border-bottom:1px solid #2A2F3E;color:#E8EAF0}
-#sidebar .brand b{color:#FF6B35}
-#sidebar .nav{flex:1}
-#sidebar .nav div{padding:11px 20px;cursor:pointer;color:#8B92A8;font-size:13px;font-weight:600;border-left:3px solid transparent}
-#sidebar .nav div:hover{color:#E8EAF0;background:#1A1E28}
-#sidebar .nav div.on{color:#FF6B35;background:rgba(255,107,53,.08);border-left-color:#FF6B35}
-#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-#topbar{height:52px;background:#12151C;border-bottom:1px solid #2A2F3E;display:flex;align-items:center;padding:0 20px;gap:10px}
-#topbar h2{flex:1;font-size:14px;font-weight:700}
-#page{flex:1;overflow-y:auto;padding:20px}
+body{background:#0A0C10;color:#E8EAF0;font-family:sans-serif}
+#app{display:flex;height:100vh;overflow:hidden}
+#sb{width:200px;background:#12151C;border-right:1px solid #2A2F3E;flex-shrink:0;display:flex;flex-direction:column}
+.brand{padding:16px 20px;font-size:18px;font-weight:800;border-bottom:1px solid #2A2F3E}
+.brand b{color:#FF6B35}
+.ni{padding:11px 20px;cursor:pointer;color:#8B92A8;font-size:13px;border-left:3px solid transparent}
+.ni:hover{color:#E8EAF0;background:#1A1E28}
+.ni.on{color:#FF6B35;background:rgba(255,107,53,.08);border-left-color:#FF6B35}
+#mn{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#tb{height:52px;background:#12151C;border-bottom:1px solid #2A2F3E;display:flex;align-items:center;padding:0 20px;gap:10px}
+#tb h2{flex:1;font-size:14px;font-weight:700}
+#pg{flex:1;overflow-y:auto;padding:20px}
 .btn{padding:7px 14px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit}
-.btnp{background:#FF6B35;color:#fff}
-.btng{background:#1A1E28;color:#8B92A8;border:1px solid #2A2F3E}
-.btngr{background:rgba(0,230,118,.12);color:#00E676;border:1px solid rgba(0,230,118,.3)}
-.btnrd{background:rgba(255,23,68,.12);color:#FF1744;border:1px solid rgba(255,23,68,.3)}
-.btnpu{background:#7C4DFF;color:#fff}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.stat{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:16px}
-.stat .v{font-size:26px;font-weight:800}
-.stat .l{font-size:11px;color:#555D75;margin-top:4px;text-transform:uppercase}
-.map{background:#1A1E28;border:1px solid #2A2F3E;border-radius:10px;height:280px;position:relative;overflow:hidden;margin-bottom:20px;cursor:crosshair}
-.pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;font-size:22px;z-index:2}
-.icard{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:14px;margin-bottom:10px;cursor:pointer;display:flex;gap:12px}
-.icard:hover{border-color:#FF6B35}
-.vcol{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:38px}
-.vbtn{width:28px;height:28px;border-radius:50%;background:#1A1E28;border:1px solid #2A2F3E;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
-.vbtn.on{background:#FF6B35;border-color:#FF6B35;color:#fff}
-.ibody{flex:1;min-width:0}
-.ititle{font-size:14px;font-weight:700;margin:4px 0;color:#E8EAF0}
-.idesc{font-size:12px;color:#8B92A8;margin-bottom:4px}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
-.dialog{background:#12151C;border:1px solid #2A2F3E;border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:24px}
+.bp{background:#FF6B35;color:#fff}
+.bg{background:#1A1E28;color:#8B92A8;border:1px solid #2A2F3E}
+.bgr{background:rgba(0,230,118,.12);color:#00E676;border:1px solid rgba(0,230,118,.3)}
+.brd{background:rgba(255,23,68,.12);color:#FF1744;border:1px solid rgba(255,23,68,.3)}
+.bpu{background:#7C4DFF;color:#fff}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+.sc{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:16px}
+.sv{font-size:26px;font-weight:800}
+.sl{font-size:11px;color:#555D75;margin-top:4px;text-transform:uppercase}
+.ic{background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:14px;margin-bottom:10px;cursor:pointer;display:flex;gap:12px}
+.ic:hover{border-color:#FF6B35}
+.vc{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:38px}
+.vb{width:28px;height:28px;border-radius:50%;background:#1A1E28;border:1px solid #2A2F3E;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+.vb.on{background:#FF6B35;border-color:#FF6B35;color:#fff}
+.ib{flex:1;min-width:0}
+.it{font-size:14px;font-weight:700;margin:4px 0;color:#E8EAF0}
+.id{font-size:12px;color:#8B92A8;margin-bottom:4px}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.dl{background:#12151C;border:1px solid #2A2F3E;border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:24px}
 .fg{margin-bottom:14px}
 .fl{display:block;font-size:11px;color:#555D75;margin-bottom:5px;text-transform:uppercase}
 .fi{width:100%;background:#1A1E28;border:1px solid #2A2F3E;border-radius:6px;padding:10px;color:#E8EAF0;font-size:13px;outline:none;font-family:inherit}
-.tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.topt{padding:9px;border:1px solid #2A2F3E;border-radius:6px;cursor:pointer;font-size:12px;background:#1A1E28;color:#E8EAF0;display:flex;align-items:center;gap:6px}
-.topt.on{border-color:#FF6B35;color:#FF6B35}
-.toast{position:fixed;bottom:20px;right:20px;background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:12px 16px;color:#E8EAF0;font-size:13px;z-index:999;display:flex;align-items:center;gap:8px}
+.tg{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
+.toast{position:fixed;bottom:20px;right:20px;background:#12151C;border:1px solid #2A2F3E;border-radius:10px;padding:12px 16px;color:#E8EAF0;font-size:13px;z-index:999}
 </style>
 </head>
 <body>
-<div id="sidebar">
-  <div class="brand">Urban<b>Fix</b> Arad</div>
-  <div class="nav" id="nav"></div>
+<div id="app">
+<div id="sb">
+<div class="brand">Urban<b>Fix</b> Arad</div>
+<div id="nav"></div>
 </div>
-<div id="main">
-  <div id="topbar"><h2 id="title">Harta</h2><button class="btn btnp" onclick="goReport()">+ Raporteaza</button></div>
-  <div id="page"></div>
+<div id="mn">
+<div id="tb"><h2 id="ttl">Harta</h2><button class="btn bp" id="rpbtn" onclick="startReport()">+ Raporteaza</button></div>
+<div id="pg"></div>
+</div>
 </div>
 <div id="modal" style="display:none"></div>
-<div id="toast" style="display:none" class="toast"></div>
+<div id="tst" class="toast" style="display:none"></div>
 <script>
-var TYPES=[
-  {id:"crack",l:"Fisura",e:"X",c:"#FF6B35"},
-  {id:"flood",l:"Inundatie",e:"~",c:"#4FC3F7"},
-  {id:"light",l:"Iluminat",e:"*",c:"#FFD54F"},
-  {id:"tree",l:"Copac",e:"T",c:"#66BB6A"},
-  {id:"sign",l:"Indicator",e:"!",c:"#EF5350"},
-  {id:"sidewalk",l:"Trotuar",e:"=",c:"#AB47BC"},
-  {id:"graffiti",l:"Graffiti",e:"G",c:"#EC407A"},
-  {id:"waste",l:"Deseuri",e:"W",c:"#8D6E63"}
+var TY=[
+{id:"crack",l:"Fisura",c:"#FF6B35"},
+{id:"flood",l:"Inundatie",c:"#4FC3F7"},
+{id:"light",l:"Iluminat",c:"#FFD54F"},
+{id:"tree",l:"Copac",c:"#66BB6A"},
+{id:"sign",l:"Indicator",c:"#EF5350"},
+{id:"sidewalk",l:"Trotuar",c:"#AB47BC"},
+{id:"graffiti",l:"Graffiti",c:"#EC407A"},
+{id:"waste",l:"Deseuri",c:"#8D6E63"}
 ];
 var APW="Arad2026Admin!";
-var CX=46.1865,CY=21.3123;
 var issues=[
-  {id:1,type:"crack",title:"Groapa pe Bd. Revolutiei",desc:"Groapa periculoasa, 15cm adancime.",lat:46.1872,lng:21.3145,votes:47,status:"active",date:"2026-03-10"},
-  {id:2,type:"light",title:"Stalp nefunctional",desc:"3 stalpi fara lumina pe Calea Aurel Vlaicu.",lat:46.1855,lng:21.3098,votes:31,status:"active",date:"2026-03-15"},
-  {id:3,type:"flood",title:"Apa stagnanta",desc:"Canal infundat, inundatie dupa ploaie.",lat:46.1890,lng:21.3165,votes:28,status:"active",date:"2026-03-18"},
-  {id:4,type:"sidewalk",title:"Trotuar distrus",desc:"Dale ridicate, periculos.",lat:46.1848,lng:21.3112,votes:22,status:"active",date:"2026-03-20"},
-  {id:5,type:"waste",title:"Gunoi ilegal",desc:"Deseuri constructie abandonate.",lat:46.1878,lng:21.3089,votes:19,status:"active",date:"2026-03-22"},
-  {id:6,type:"crack",title:"Fisuri pe pod",desc:"Fisuri pe podul peste Mures.",lat:46.1830,lng:21.3200,votes:63,status:"resolved",date:"2026-02-15"},
-  {id:7,type:"sign",title:"Indicator STOP lipsa",desc:"Intersectie periculoasa.",lat:46.1862,lng:21.3134,votes:41,status:"resolved",date:"2026-02-20"}
+{id:1,type:"crack",title:"Groapa pe Bd. Revolutiei",desc:"Groapa periculoasa, 15cm adancime.",votes:47,status:"active",date:"2026-03-10"},
+{id:2,type:"light",title:"Stalp nefunctional",desc:"3 stalpi fara lumina pe Calea Aurel Vlaicu.",votes:31,status:"active",date:"2026-03-15"},
+{id:3,type:"flood",title:"Apa stagnanta",desc:"Canal infundat, inundatie dupa ploaie.",votes:28,status:"active",date:"2026-03-18"},
+{id:4,type:"sidewalk",title:"Trotuar distrus",desc:"Dale ridicate, periculos.",votes:22,status:"active",date:"2026-03-20"},
+{id:5,type:"waste",title:"Gunoi ilegal",desc:"Deseuri constructie abandonate.",votes:19,status:"active",date:"2026-03-22"},
+{id:6,type:"crack",title:"Fisuri pe pod",desc:"Fisuri pe podul peste Mures.",votes:63,status:"resolved",date:"2026-02-15"},
+{id:7,type:"sign",title:"Indicator STOP lipsa",desc:"Intersectie periculoasa.",votes:41,status:"resolved",date:"2026-02-20"}
 ];
-var page="map",sel=null,voted=[],admOk=false,formPin=null,formType="crack";
+var pg="map",voted=[],admOk=false,fType="crack",fPin=null;
 
-function toast(msg){
-  var t=document.getElementById("toast");
-  t.textContent=msg;t.style.display="flex";
-  setTimeout(function(){t.style.display="none";},3000);
+function showToast(m){
+var t=document.getElementById("tst");
+t.textContent=m;t.style.display="block";
+setTimeout(function(){t.style.display="none";},3000);
 }
 
-function nav(p){
-  page=p;sel=null;render();
-}
-
-function goReport(){
-  page="map";
-  render();
-  toast("Click pe harta pentru a raporta!");
-}
-
-function xy(lat,lng){
-  return {
-    x:Math.max(2,Math.min(98,50+(lng-CY)*560)),
-    y:Math.max(2,Math.min(98,50-(lat-CX)*800))
-  };
-}
-
-function hav(a,b,c,d){
-  var R=6371000,r=Math.PI/180;
-  var e=(c-a)*r,f=(d-b)*r;
-  var g=Math.sin(e/2)*Math.sin(e/2)+Math.cos(a*r)*Math.cos(c*r)*Math.sin(f/2)*Math.sin(f/2);
-  return R*2*Math.atan2(Math.sqrt(g),Math.sqrt(1-g));
-}
+function getActive(){return issues.filter(function(i){return i.status==="active";});}
+function getResolved(){return issues.filter(function(i){return i.status==="resolved";});}
 
 function renderNav(){
-  var active=issues.filter(function(i){return i.status==="active";});
-  var resolved=issues.filter(function(i){return i.status==="resolved";});
-  var items=[
-    {id:"map",label:"Harta ("+active.length+")"},
-    {id:"issues",label:"Probleme"},
-    {id:"resolved",label:"Rezolvate ("+resolved.length+")"},
-    {id:"admin",label:"Admin"}
-  ];
-  var html="";
-  items.forEach(function(item){
-    html+='<div class="'+(page===item.id?"on":"")+'" onclick="nav(\''+item.id+'\')">'+item.label+'</div>';
-  });
-  document.getElementById("nav").innerHTML=html;
+var items=[
+{id:"map",label:"Harta"},
+{id:"issues",label:"Probleme ("+getActive().length+")"},
+{id:"resolved",label:"Rezolvate ("+getResolved().length+")"},
+{id:"admin",label:"Admin"}
+];
+var h="";
+for(var i=0;i<items.length;i++){
+var item=items[i];
+h+='<div class="ni'+(pg===item.id?" on":"")+'" onclick="goPage(\''+item.id+'\')">'+item.label+'</div>';
+}
+document.getElementById("nav").innerHTML=h;
 }
 
-function renderMap(){
-  var active=issues.filter(function(i){return i.status==="active";});
-  var resolved=issues.filter(function(i){return i.status==="resolved";});
-  var total=issues.reduce(function(a,i){return a+i.votes;},0);
-  
-  var html='<div class="g4">';
-  html+='<div class="stat"><div class="v" style="color:#FF6B35">'+active.length+'</div><div class="l">Active</div></div>';
-  html+='<div class="stat"><div class="v" style="color:#00E676">'+resolved.length+'</div><div class="l">Rezolvate</div></div>';
-  html+='<div class="stat"><div class="v" style="color:#00E5FF">'+total+'</div><div class="l">Voturi</div></div>';
-  html+='<div class="stat"><div class="v" style="color:#00E676;font-size:16px">LIVE</div><div class="l">Status</div></div>';
-  html+='</div>';
-  
-  html+='<div class="map" id="mapel" onclick="mapClick(event)">';
-  issues.forEach(function(issue){
-    var pos=xy(issue.lat,issue.lng);
-    var t=TYPES.find(function(x){return x.id===issue.type;})||TYPES[0];
-    html+='<div class="pin" style="left:'+pos.x+'%;top:'+pos.y+'%;color:'+t.c+'" onclick="event.stopPropagation();openIssue('+issue.id+')">'+t.e+'<div style="position:absolute;top:-8px;right:-8px;background:#FF6B35;color:#fff;font-size:9px;padding:1px 4px;border-radius:8px;font-weight:700">'+issue.votes+'</div></div>';
-  });
-  html+='<div style="position:absolute;bottom:8px;left:10px;background:rgba(0,0,0,.7);padding:4px 10px;border-radius:6px;font-size:11px;color:#8B92A8">Click pe harta pentru a raporta</div>';
-  html+='</div>';
-  
-  html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong>Cele mai votate</strong></div>';
-  
-  var top=active.slice().sort(function(a,b){return b.votes-a.votes;}).slice(0,3);
-  top.forEach(function(issue){html+=renderCard(issue);});
-  
-  document.getElementById("page").innerHTML=html;
-  document.getElementById("title").textContent="Harta Arad";
-}
+function goPage(p){pg=p;render();}
 
-function renderIssues(){
-  var list=(page==="resolved"?issues.filter(function(i){return i.status==="resolved";}):issues.filter(function(i){return i.status==="active";}));
-  list=list.slice().sort(function(a,b){return b.votes-a.votes;});
-  var html=list.length===0?'<div style="text-align:center;padding:40px;color:#555D75">Nu exista probleme</div>':'';
-  list.forEach(function(issue){html+=renderCard(issue);});
-  document.getElementById("page").innerHTML=html;
-  document.getElementById("title").textContent=page==="resolved"?"Rezolvate":"Probleme Active";
-}
-
-function renderCard(issue){
-  var t=TYPES.find(function(x){return x.id===issue.type;})||TYPES[0];
-  var v=voted.indexOf(issue.id)>=0;
-  return '<div class="icard" onclick="openIssue('+issue.id+')"><div class="vcol"><div class="vbtn'+(v?" on":"")+'" onclick="event.stopPropagation();doVote('+issue.id+')">^</div><div style="font-size:16px;font-weight:800">'+issue.votes+'</div><div style="font-size:9px;color:#555D75">voturi</div></div><div class="ibody"><span style="display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:'+t.c+'22;color:'+t.c+'">'+t.l+'</span><div class="ititle">'+issue.title+'</div><div class="idesc">'+issue.desc+'</div><div style="font-size:11px;color:#555D75">'+issue.date+'</div></div></div>';
-}
-
-function renderAdmin(){
-  document.getElementById("title").textContent="Admin";
-  if(!admOk){
-    document.getElementById("page").innerHTML='<div style="max-width:360px;margin:40px auto;background:#12151C;border:1px solid #7C4DFF;border-radius:16px;padding:32px"><div style="text-align:center;margin-bottom:20px"><div style="font-size:36px">S</div><div style="font-size:20px;font-weight:800;color:#7C4DFF;margin-top:8px">Admin Portal</div></div><div class="fg"><label class="fl">Parola</label><input class="fi" id="apw" type="password"/></div><button class="btn btnpu" style="width:100%;padding:11px" onclick="doLogin()">Intra in Admin</button><p style="text-align:center;margin-top:10px;font-size:11px;color:#555D75">Parola: Arad2026Admin!</p></div>';
-    return;
-  }
-  var active=issues.filter(function(i){return i.status==="active";});
-  var resolved=issues.filter(function(i){return i.status==="resolved";});
-  var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div style="font-size:20px;font-weight:800">Admin Dashboard</div><button class="btn btng" onclick="admOk=false;render()">Iesi</button></div>';
-  html+='<div class="g4"><div class="stat"><div class="v" style="color:#FF1744">'+active.length+'</div><div class="l">Active</div></div><div class="stat"><div class="v" style="color:#00E676">'+resolved.length+'</div><div class="l">Rezolvate</div></div><div class="stat"><div class="v" style="color:#00E5FF">'+issues.reduce(function(a,i){return a+i.votes;},0)+'</div><div class="l">Voturi</div></div><div class="stat"><div class="v" style="color:#7C4DFF">'+Math.round(resolved.length/Math.max(issues.length,1)*100)+'%</div><div class="l">Rezolvare</div></div></div>';
-  html+='<div style="background:#12151C;border:1px solid #2A2F3E;border-radius:10px;overflow:hidden;overflow-x:auto"><table style="width:100%;border-collapse:collapse"><thead><tr>';
-  ["Tip","Titlu","Data","Status","Voturi","Actiuni"].forEach(function(h){html+='<th style="background:#1A1E28;padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;color:#555D75;text-align:left;border-bottom:1px solid #2A2F3E">'+h+'</th>';});
-  html+='</tr></thead><tbody>';
-  issues.forEach(function(issue){
-    var t=TYPES.find(function(x){return x.id===issue.type;})||TYPES[0];
-    html+='<tr><td style="padding:11px 12px;border-bottom:1px solid #2A2F3E"><span style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:'+t.c+'22;color:'+t.c+'">'+t.l+'</span></td>';
-    html+='<td style="padding:11px 12px;border-bottom:1px solid #2A2F3E;font-weight:700;color:#E8EAF0">'+issue.title+'</td>';
-    html+='<td style="padding:11px 12px;border-bottom:1px solid #2A2F3E;font-size:11px;color:#8B92A8">'+issue.date+'</td>';
-    html+='<td style="padding:11px 12px;border-bottom:1px solid #2A2F3E"><span style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:'+(issue.status==="resolved"?"rgba(0,230,118,.15)":"rgba(255,107,53,.15)")+';color:'+(issue.status==="resolved"?"#00E676":"#FF6B35")+'">'+(issue.status==="resolved"?"Rezolvat":"Activ")+'</span></td>';
-    html+='<td style="padding:11px 12px;border-bottom:1px solid #2A2F3E;font-weight:700;color:#FF6B35">'+issue.votes+'</td>';
-    html+='<td style="padding:11px 12px;border-bottom:1px solid #2A2F3E"><div style="display:flex;gap:6px">'+(issue.status==="active"?'<button class="btn btngr" style="padding:4px 8px;font-size:11px" onclick="doResolve('+issue.id+')">OK</button>':'')+'<button class="btn btnrd" style="padding:4px 8px;font-size:11px" onclick="doDelete('+issue.id+')">X</button></div></td></tr>';
-  });
-  html+='</tbody></table></div>';
-  document.getElementById("page").innerHTML=html;
+function startReport(){
+pg="map";render();
+showToast("Click pe harta pentru a raporta!");
 }
 
 function render(){
-  renderNav();
-  if(page==="map")renderMap();
-  else if(page==="issues"||page==="resolved")renderIssues();
-  else if(page==="admin")renderAdmin();
+renderNav();
+var ttl={map:"Harta Arad",issues:"Probleme Active",resolved:"Probleme Rezolvate",admin:"Admin"};
+document.getElementById("ttl").textContent=ttl[pg]||"";
+if(pg==="map")renderMap();
+else if(pg==="issues")renderList(getActive());
+else if(pg==="resolved")renderList(getResolved());
+else if(pg==="admin")renderAdmin();
 }
 
-function mapClick(e){
-  var m=document.getElementById("mapel");
-  if(!m)return;
-  var r=m.getBoundingClientRect();
-  var px=((e.clientX-r.left)/r.width)*100;
-  var py=((e.clientY-r.top)/r.height)*100;
-  formPin={lat:CX+(50-py)/800,lng:CY+(px-50)/560,px:px,py:py};
-  formType="crack";
-  showForm();
+function renderMap(){
+var ac=getActive();var rs=getResolved();
+var total=0;for(var i=0;i<issues.length;i++)total+=issues[i].votes;
+var h="";
+h+="<div class='g2'>";
+h+="<div class='sc'><div class='sv' style='color:#FF6B35'>"+ac.length+"</div><div class='sl'>Active</div></div>";
+h+="<div class='sc'><div class='sv' style='color:#00E676'>"+rs.length+"</div><div class='sl'>Rezolvate</div></div>";
+h+="<div class='sc'><div class='sv' style='color:#00E5FF'>"+total+"</div><div class='sl'>Voturi</div></div>";
+h+="<div class='sc'><div class='sv' style='color:#00E676;font-size:16px'>LIVE</div><div class='sl'>Status</div></div>";
+h+="</div>";
+h+="<div style='margin-bottom:16px;display:flex;justify-content:space-between;align-items:center'>";
+h+="<strong>Cele mai votate</strong>";
+h+="<button class='btn bg' onclick='goPage(\"issues\")'>Vezi toate</button>";
+h+="</div>";
+var sorted=ac.slice().sort(function(a,b){return b.votes-a.votes;});
+for(var i=0;i<Math.min(sorted.length,5);i++){h+=makeCard(sorted[i]);}
+document.getElementById("pg").innerHTML=h;
 }
 
-function showForm(){
-  var html='<div class="overlay" onclick="closeModal()"><div class="dialog" onclick="event.stopPropagation()">';
-  html+='<h3 style="font-size:17px;font-weight:800;margin-bottom:18px;color:#E8EAF0">Raporteaza problema</h3>';
-  html+='<div style="background:#1A1E28;border-radius:6px;padding:8px 12px;font-size:11px;color:#00E5FF;margin-bottom:14px">Pin: '+formPin.lat.toFixed(5)+'N, '+formPin.lng.toFixed(5)+'E</div>';
-  html+='<div class="fg"><label class="fl">Tip problema</label><div class="tgrid">';
-  TYPES.forEach(function(t){
-    html+='<div class="topt'+(formType===t.id?" on":"")+'" onclick="setType(\''+t.id+'\')" style="'+(formType===t.id?"border-color:"+t.c+";color:"+t.c:"")+'">'+t.e+" "+t.l+'</div>';
-  });
-  html+='</div></div>';
-  html+='<div class="fg"><label class="fl">Titlu</label><input class="fi" id="ftitle" placeholder="Descrie problema..."/></div>';
-  html+='<div class="fg"><label class="fl">Descriere</label><textarea class="fi" id="fdesc" rows="3" placeholder="Detalii..."></textarea></div>';
-  html+='<div style="display:flex;gap:8px"><button class="btn btng" style="flex:1" onclick="closeModal()">Anuleaza</button><button class="btn btnp" style="flex:1" onclick="submitForm()">Trimite</button></div>';
-  html+='</div></div>';
-  document.getElementById("modal").innerHTML=html;
-  document.getElementById("modal").style.display="block";
+function renderList(list){
+var sorted=list.slice().sort(function(a,b){return b.votes-a.votes;});
+var h="";
+if(sorted.length===0){h="<div style='text-align:center;padding:40px;color:#555D75'>Nu exista probleme</div>";}
+else{for(var i=0;i<sorted.length;i++){h+=makeCard(sorted[i]);}}
+document.getElementById("pg").innerHTML=h;
 }
 
-function setType(t){formType=t;showForm();}
-
-function closeModal(){
-  document.getElementById("modal").style.display="none";
-  document.getElementById("modal").innerHTML="";
-}
-
-function submitForm(){
-  var title=document.getElementById("ftitle").value.trim();
-  if(!title){alert("Introdu un titlu!");return;}
-  var desc=document.getElementById("fdesc").value.trim();
-  issues.unshift({id:Date.now(),type:formType,title:title,desc:desc,lat:formPin.lat,lng:formPin.lng,votes:0,status:"active",date:new Date().toISOString().split("T")[0]});
-  closeModal();
-  toast("Problema raportata!");
-  render();
+function makeCard(issue){
+var t=null;
+for(var i=0;i<TY.length;i++){if(TY[i].id===issue.type){t=TY[i];break;}}
+if(!t)t=TY[0];
+var v=voted.indexOf(issue.id)>=0;
+var h="<div class='ic' onclick='openIssue("+issue.id+")'>";
+h+="<div class='vc'>";
+h+="<div class='vb"+(v?" on":"")+"' onclick='event.stopPropagation();doVote("+issue.id+")'>^</div>";
+h+="<div style='font-size:16px;font-weight:800'>"+issue.votes+"</div>";
+h+="<div style='font-size:9px;color:#555D75'>voturi</div>";
+h+="</div>";
+h+="<div class='ib'>";
+h+="<span class='tg' style='background:"+t.c+"22;color:"+t.c+"'>"+t.l+"</span>";
+h+="<div class='it'>"+issue.title+"</div>";
+h+="<div class='id'>"+issue.desc+"</div>";
+h+="<div style='font-size:11px;color:#555D75'>"+issue.date+"</div>";
+h+="</div></div>";
+return h;
 }
 
 function openIssue(id){
-  var issue=issues.find(function(i){return i.id===id;});
-  if(!issue)return;
-  var t=TYPES.find(function(x){return x.id===issue.type;})||TYPES[0];
-  var v=voted.indexOf(id)>=0;
-  var html='<div class="overlay" onclick="closeModal()"><div class="dialog" onclick="event.stopPropagation()">';
-  html+='<h3 style="font-size:16px;font-weight:800;margin-bottom:14px;color:#E8EAF0">'+issue.title+'</h3>';
-  html+='<div style="margin-bottom:12px"><span style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:'+t.c+'22;color:'+t.c+'">'+t.l+'</span>';
-  html+=' <span style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:'+(issue.status==="resolved"?"rgba(0,230,118,.15)":"rgba(255,107,53,.15)")+';color:'+(issue.status==="resolved"?"#00E676":"#FF6B35")+'">'+(issue.status==="resolved"?"Rezolvat":"Activ")+'</span></div>';
-  html+='<p style="font-size:13px;color:#8B92A8;line-height:1.6;margin-bottom:14px">'+issue.desc+'</p>';
-  html+='<p style="font-size:11px;color:#555D75;margin-bottom:14px">Data: '+issue.date+'</p>';
-  html+='<div style="display:flex;gap:8px;margin-bottom:12px">';
-  html+='<button class="btn '+(v?"btnp":"btng")+'" style="flex:1" onclick="doVote('+id+');closeModal();">'+(v?"Votat":"Voteaza")+' ('+issue.votes+')</button>';
-  if(issue.status==="active")html+='<button class="btn btngr" style="flex:1" onclick="doResolve('+id+');closeModal();">Rezolvat</button>';
-  html+='</div>';
-  html+='<button class="btn btng" style="width:100%" onclick="closeModal()">Inchide</button>';
-  html+='</div></div>';
-  document.getElementById("modal").innerHTML=html;
-  document.getElementById("modal").style.display="block";
+var issue=null;
+for(var i=0;i<issues.length;i++){if(issues[i].id===id){issue=issues[i];break;}}
+if(!issue)return;
+var t=null;for(var i=0;i<TY.length;i++){if(TY[i].id===issue.type){t=TY[i];break;}}if(!t)t=TY[0];
+var v=voted.indexOf(id)>=0;
+var h="<div class='ov' onclick='closeModal()'><div class='dl' onclick='event.stopPropagation()'>";
+h+="<h3 style='font-size:16px;font-weight:800;margin-bottom:14px;color:#E8EAF0'>"+issue.title+"</h3>";
+h+="<div style='margin-bottom:12px'><span class='tg' style='background:"+t.c+"22;color:"+t.c+"'>"+t.l+"</span></div>";
+h+="<p style='font-size:13px;color:#8B92A8;line-height:1.6;margin-bottom:14px'>"+issue.desc+"</p>";
+h+="<p style='font-size:11px;color:#555D75;margin-bottom:14px'>Data: "+issue.date+"</p>";
+h+="<div style='display:flex;gap:8px;margin-bottom:12px'>";
+h+="<button class='btn "+(v?"bp":"bg")+"' style='flex:1' onclick='doVote("+id+");closeModal()'>"+(v?"Votat":"Voteaza")+" ("+issue.votes+")</button>";
+if(issue.status==="active")h+="<button class='btn bgr' style='flex:1' onclick='doResolve("+id+");closeModal()'>Rezolvat</button>";
+h+="</div>";
+h+="<button class='btn bg' style='width:100%' onclick='closeModal()'>Inchide</button>";
+h+="</div></div>";
+document.getElementById("modal").innerHTML=h;
+document.getElementById("modal").style.display="block";
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+document.getElementById("modal").innerHTML="";
 }
 
 function doVote(id){
-  var idx=voted.indexOf(id);
-  if(idx>=0){voted.splice(idx,1);issues=issues.map(function(i){return i.id===id?Object.assign({},i,{votes:i.votes-1}):i;});}
-  else{voted.push(id);issues=issues.map(function(i){return i.id===id?Object.assign({},i,{votes:i.votes+1}):i;});toast("Vot inregistrat!");}
-  render();
+var idx=voted.indexOf(id);
+if(idx>=0){
+voted.splice(idx,1);
+for(var i=0;i<issues.length;i++){if(issues[i].id===id){issues[i].votes--;break;}}
+}else{
+voted.push(id);
+for(var i=0;i<issues.length;i++){if(issues[i].id===id){issues[i].votes++;break;}}
+showToast("Vot inregistrat!");
+}
+render();
 }
 
 function doResolve(id){
-  issues=issues.map(function(i){return i.id===id?Object.assign({},i,{status:"resolved"}):i;});
-  toast("Rezolvat!");render();
+for(var i=0;i<issues.length;i++){if(issues[i].id===id){issues[i].status="resolved";break;}}
+showToast("Rezolvat!");render();
 }
 
 function doDelete(id){
-  issues=issues.filter(function(i){return i.id!==id;});
-  toast("Sters.");render();
+for(var i=0;i<issues.length;i++){if(issues[i].id===id){issues.splice(i,1);break;}}
+showToast("Sters.");render();
+}
+
+function renderAdmin(){
+if(!admOk){
+var h="<div style='max-width:360px;margin:40px auto;background:#12151C;border:1px solid #7C4DFF;border-radius:16px;padding:32px'>";
+h+="<div style='text-align:center;margin-bottom:20px'><div style='font-size:20px;font-weight:800;color:#7C4DFF'>Admin Portal</div></div>";
+h+="<div class='fg'><label class='fl'>Parola</label><input class='fi' id='apw' type='password'/></div>";
+h+="<button class='btn bpu' style='width:100%;padding:11px' onclick='doLogin()'>Intra in Admin</button>";
+h+="<p style='text-align:center;margin-top:10px;font-size:11px;color:#555D75'>Parola: Arad2026Admin!</p>";
+h+="</div>";
+document.getElementById("pg").innerHTML=h;
+return;
+}
+var ac=getActive();var rs=getResolved();
+var total=0;for(var i=0;i<issues.length;i++)total+=issues[i].votes;
+var h="<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:20px'>";
+h+="<div style='font-size:20px;font-weight:800'>Admin Dashboard</div>";
+h+="<button class='btn bg' onclick='admOk=false;render()'>Iesi</button></div>";
+h+="<div class='g2'>";
+h+="<div class='sc'><div class='sv' style='color:#FF1744'>"+ac.length+"</div><div class='sl'>Active</div></div>";
+h+="<div class='sc'><div class='sv' style='color:#00E676'>"+rs.length+"</div><div class='sl'>Rezolvate</div></div>";
+h+="<div class='sc'><div class='sv' style='color:#00E5FF'>"+total+"</div><div class='sl'>Voturi</div></div>";
+h+="<div class='sc'><div class='sv' style='color:#7C4DFF'>"+Math.round(rs.length/Math.max(issues.length,1)*100)+"%</div><div class='sl'>Rezolvare</div></div>";
+h+="</div>";
+h+="<div style='background:#12151C;border:1px solid #2A2F3E;border-radius:10px;overflow:hidden;overflow-x:auto'>";
+h+="<table style='width:100%;border-collapse:collapse'><thead><tr>";
+var cols=["Tip","Titlu","Data","Status","Voturi","Actiuni"];
+for(var c=0;c<cols.length;c++){h+="<th style='background:#1A1E28;padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;color:#555D75;text-align:left;border-bottom:1px solid #2A2F3E'>"+cols[c]+"</th>";}
+h+="</tr></thead><tbody>";
+for(var i=0;i<issues.length;i++){
+var issue=issues[i];
+var t=null;for(var j=0;j<TY.length;j++){if(TY[j].id===issue.type){t=TY[j];break;}}if(!t)t=TY[0];
+h+="<tr>";
+h+="<td style='padding:11px 12px;border-bottom:1px solid #2A2F3E'><span class='tg' style='background:"+t.c+"22;color:"+t.c+"'>"+t.l+"</span></td>";
+h+="<td style='padding:11px 12px;border-bottom:1px solid #2A2F3E;font-weight:700;color:#E8EAF0'>"+issue.title+"</td>";
+h+="<td style='padding:11px 12px;border-bottom:1px solid #2A2F3E;font-size:11px;color:#8B92A8'>"+issue.date+"</td>";
+h+="<td style='padding:11px 12px;border-bottom:1px solid #2A2F3E'><span style='padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:"+(issue.status==="resolved"?"rgba(0,230,118,.15)":"rgba(255,107,53,.15)")+";color:"+(issue.status==="resolved"?"#00E676":"#FF6B35")+";'>"+(issue.status==="resolved"?"Rezolvat":"Activ")+"</span></td>";
+h+="<td style='padding:11px 12px;border-bottom:1px solid #2A2F3E;font-weight:700;color:#FF6B35'>"+issue.votes+"</td>";
+h+="<td style='padding:11px 12px;border-bottom:1px solid #2A2F3E'><div style='display:flex;gap:6px'>";
+if(issue.status==="active")h+="<button class='btn bgr' style='padding:4px 8px;font-size:11px' onclick='doResolve("+issue.id+")'>OK</button>";
+h+="<button class='btn brd' style='padding:4px 8px;font-size:11px' onclick='doDelete("+issue.id+")'>X</button>";
+h+="</div></td></tr>";
+}
+h+="</tbody></table></div>";
+document.getElementById("pg").innerHTML=h;
 }
 
 function doLogin(){
-  var pw=document.getElementById("apw").value;
-  if(pw===APW){admOk=true;render();}
-  else{alert("Parola incorecta!");}
+var pw=document.getElementById("apw").value;
+if(pw===APW){admOk=true;render();}
+else{alert("Parola incorecta!");}
 }
 
+function showReportForm(){
+var h="<div class='ov' onclick='closeModal()'><div class='dl' onclick='event.stopPropagation()'>";
+h+="<h3 style='font-size:16px;font-weight:800;margin-bottom:18px;color:#E8EAF0'>Raporteaza problema</h3>";
+h+="<div class='fg'><label class='fl'>Tip problema</label><div style='display:grid;grid-template-columns:repeat(2,1fr);gap:8px'>";
+for(var i=0;i<TY.length;i++){
+var t=TY[i];
+h+="<div style='padding:9px;border:1px solid "+(fType===t.id?t.c:"#2A2F3E")+";border-radius:6px;cursor:pointer;font-size:12px;background:#1A1E28;color:"+(fType===t.id?t.c:"#E8EAF0")+"' onclick='setFType(\""+t.id+"\")'>"+t.l+"</div>";
+}
+h+="</div></div>";
+h+="<div class='fg'><label class='fl'>Titlu</label><input class='fi' id='ftitle' placeholder='Descrie problema...' maxlength='100'/></div>";
+h+="<div class='fg'><label class='fl'>Descriere</label><textarea class='fi' id='fdesc' rows='3' placeholder='Detalii...'></textarea></div>";
+h+="<div style='display:flex;gap:8px'><button class='btn bg' style='flex:1' onclick='closeModal()'>Anuleaza</button><button class='btn bp' style='flex:1' onclick='submitReport()'>Trimite</button></div>";
+h+="</div></div>";
+document.getElementById("modal").innerHTML=h;
+document.getElementById("modal").style.display="block";
+}
+
+function setFType(t){fType=t;showReportForm();}
+
+function submitReport(){
+var title=document.getElementById("ftitle").value.trim();
+if(!title){alert("Introdu un titlu!");return;}
+var desc=document.getElementById("fdesc").value.trim();
+var newIssue={id:Date.now(),type:fType,title:title,desc:desc,votes:0,status:"active",date:new Date().toISOString().split("T")[0]};
+issues.unshift(newIssue);
+closeModal();
+showToast("Problema raportata cu succes!");
+render();
+}
+
+document.getElementById("rpbtn").onclick=function(){showReportForm();};
 render();
 </script>
 </body>
